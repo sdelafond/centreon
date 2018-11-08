@@ -68,7 +68,7 @@ class PollerConnectionConfigurationService extends ServerConnectionConfiguration
             $centralBrokerConfigId = $this->brokerRepository->findCentralBrokerConfigId();
 
             // add broker input configuration on central to get data from poller
-            $brokerInfosEntities = $openFlowInputConfig($this->serverIp);
+            $brokerInfosEntities = $openFlowInputConfig($this->name, $this->serverIp);
             $this->brokerConfigurationService->addFlow($centralBrokerConfigId, 'input', $brokerInfosEntities);
         }
 

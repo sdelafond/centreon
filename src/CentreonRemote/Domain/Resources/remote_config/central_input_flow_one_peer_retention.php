@@ -3,9 +3,9 @@
 use Centreon\Domain\Entity\CfgCentreonBrokerInfo;
 
 // configuration if input flow of central broker to get data from the remote poller
-return function (string $serverIP) {
+return function (string $pollerName, string $serverIP) {
     return [
-        new CfgCentreonBrokerInfo('name', 'connection-to-poller'),
+        new CfgCentreonBrokerInfo('name', "connection-to-${pollerName}"),
         new CfgCentreonBrokerInfo('port', '5669'),
         new CfgCentreonBrokerInfo('retry_interval', '60'),
         new CfgCentreonBrokerInfo('buffering_timeout', '0'),
