@@ -1,4 +1,4 @@
-centreon-web (10.18.0-1) unstable; urgency=medium
+centreon-web (18.10.0-1) unstable; urgency=medium
 
   * Initial release (Closes: #913903)
 
