@@ -1,0 +1,7 @@
+etc/centreon
+usr/lib/centreon/plugins
+usr/share/centreon/bin
+usr/share/centreon/data
+var/lib/centreon
+var/log/centreon
+var/run/centreon

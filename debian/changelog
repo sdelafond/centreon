@@ -1,0 +1,5 @@
+centreon-web (10.18.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #913903)
+
+ -- Sebastien Delafond <seb@debian.org>  Mon, 12 Nov 2018 15:56:47 +0100

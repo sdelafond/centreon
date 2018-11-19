@@ -1,0 +1,211 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: centreon
+Source: https://github.com/centreon/centreon
+
+Files: *
+Copyright: 2005-2018 Centreon
+License: GPL-2
+
+Files: header.txt, www/include/configuration/configKnowledge/*
+Copyright: 2005-2015 MERETHIS
+License: GPL-2
+
+Files: GPL_LIB/smarty-plugins/block.t.php
+Copyright: 2004-2005 Sagi Bashari
+License: LGPL-2.1
+
+Files: install.sh, libinstall/*.sh, libinstall/cinstall, libinstall/functions, libinstall/gettext
+Copyright: 2008 Guillaume Watteeux
+License: GPL-2
+
+Files: libinstall/gettext
+Copyright: 2003, 2005-2007 Free Software Foundation, Inc.
+License: GPL-2
+
+Files: www/include/common/javascript/Timeline/*
+Copyright: SIMILE - http://simile.mit.edu/timeline
+License: MIT
+
+Files: www/include/common/javascript/handlebars-v4.0.5.js
+Copyright: 2011-2015 by Yehuda Katz
+License: MIT
+
+Files: www/include/common/javascript/jquery/jquery-ui.js, www/include/common/javascript/jquery/jquery.js, www/include/common/javascript/jquery/jquery.ui.widget.js, www/include/common/javascript/jquery/plugins/select2/js/select2.full.js, www/include/common/javascript/jquery/themes/blitzer/jquery-ui.css
+Copyright: jQuery Foundation and other contributors
+License: MIT
+
+Files: www/include/common/javascript/jquery/jquery.cookie.js
+Copyright: 2006, 2014 Klaus Hartl
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/buzz/buzz.min.js
+Copyright: 2010-2013 Jay Salvat
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/fileUpload/*
+Copyright: 2013 Sebastian Tschan
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/jpaginator/index.html
+Copyright: 2013 Remy Elazare
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/noty/promise.js
+Copyright: 2011, John Resig & 2011 The Dojo Foundation
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/select2/js/select2.js
+Copyright: 2011-2014, The Dojo Foundation
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/sheepit/*
+Copyright: 2007 Maxime Haineault
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/timepicker/jquery.ui.timepicker.js
+Copyright: 2010-2013 Francois Gelinas
+License: MIT
+
+Files: www/include/common/javascript/jquery/plugins/treeTable/jquery.treeTable.min.js
+Copyright: 2011 Ludo van den Boom
+License: MIT
+
+Files: www/include/common/javascript/marked.js
+Copyright: 2011-2014 Christopher Jeffrey
+License: MIT
+
+Files: www/include/common/javascript/xslt.js
+Copyright: 2005-2007 Johann Burkard
+License: MIT
+
+Files: www/include/configuration/configGenerate/DB-Func.php
+Copyright: 2005-2018 Centreon, 2005 Justin Frim
+License: GPL-2
+
+Files: lib/Slug.class.php
+Copyright: 2010 Fabian Graßl
+License: MIT
+
+Files: www/include/monitoring/recurrentDowntime/json.php
+Copyright: 2005 Michal Migurski
+License: BSD-2
+
+Files: www/lib/HTML/QuickForm/*
+Copyright: 2005-2009, Laurent Laville <pear@laurent-laville.org>
+License: BSD
+
+Files: www/lib/HTML/QuickForm/customcheckbox.php
+Copyright: 2001-2011 The PHP Group
+License: PHP-3.01
+
+Files: www/lib/wz_tooltip/*
+Copyright: 2002-2008 Walter Zorn
+License: LGPL-2.1
+
+Files: debian/*
+Copyright: 2018 Sebastien Delafond <seb@debian.org>
+License: GPL-2
+
+License: GPL-2
+ See /usr/share/common-licenses/GPL-2
+
+License: LGPL-2.1
+ See /usr/share/common-licenses/LGPL-2.1
+
+License: BSD
+ See /usr/share/common-licenses/BSD
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is furnished
+ to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+License: BSD-2
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ 1. Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+
+License: PHP-3.01
+
+ Redistribution and use in source and binary forms, with or without
+ modification, is permitted provided that the following conditions are
+ met:
+ .
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+ .
+   2. Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+ .
+   3. The name "PHP" must not be used to endorse or promote products
+      derived from this software without prior written permission. For
+      written permission, please contact group@php.net.
+ .
+   4. Products derived from this software may not be called "PHP", nor
+      may "PHP" appear in their name, without prior written permission
+      from group@php.net.  You may indicate that your software works
+      in conjunction with PHP by saying "Foo for PHP" instead of
+      calling it "PHP Foo" or "phpfoo"
+ .
+   5. The PHP Group may publish revised and/or new versions of the
+      license from time to time. Each version will be given a
+      distinguishing version number.  Once covered code has been
+      published under a particular version of the license, you may
+      always continue to use it under the terms of that version. You
+      may also choose to use such covered code under the terms of any
+      subsequent version of the license published by the PHP Group. No
+      one other than the PHP Group has the right to modify the terms
+      applicable to covered code created under this License.
+ .
+   6. Redistributions of any form whatsoever must retain the following
+      acknowledgment: "This product includes PHP software, freely
+      available from <http://www.php.net/software/>".
+ .
+ THIS SOFTWARE IS PROVIDED BY THE PHP DEVELOPMENT TEAM ``AS IS'' AND
+ ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE PHP
+ DEVELOPMENT TEAM OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
