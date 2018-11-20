@@ -3,8 +3,8 @@
 adduser --system --home /var/lib/centreon --group centreon
 adduser centreon centreon-broker
 
-# FIXME: move smarty-cache somewhere under /var/lib/centreon
-chown -R www-data /usr/share/centreon/www/GPL_LIB/SmartyCache
+chgrp -R centreon /usr/share/centreon/www
+chmod g+w /usr/share/centreon/www
 
 if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
   . /usr/share/apache2/apache2-maintscript-helper
