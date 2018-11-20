@@ -11,18 +11,33 @@ Vcs-Git: https://salsa.debian.org/debian/centreon.git
 Package: centreon-web
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, \
+ adduser, \
  apache2, \
  bsd-mailx, \
+ centreon-broker, \
+ composer, \
  gettext, \
  libapache2-mod-php7.3, \
  libconfig-inifiles-perl, \
  libcrypt-des-perl, \
+ libdbd-mysql-perl, \
  libdigest-hmac-perl, \
  libdigest-sha-perl, \
  libgd-perl, \
  librrds-perl, \
  mariadb-server, \
+ monitoring-plugins-basic, \
+ monitoring-plugins-common, \
+ monitoring-plugins-standard, \
+ nagios-snmp-plugins, \
+ php-date, \
+ php-db, \
  php-pear, \
+ php-pimple, \
+ php-psr-container, \
+ php-symfony-filesystem, \
+ php-symfony-finder, \
+ php-symfony-yaml, \
  php7.3, \
  php7.3-curl, \
  php7.3-fpm, \
@@ -31,14 +46,16 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, \
  php7.3-json, \
  php7.3-ldap, \
  php7.3-mbstring, \
- php7.3-mcrypt, \
  php7.3-mysql, \
  php7.3-opcache, \
  php7.3-readline, \
  php7.3-snmp, \
  php7.3-sqlite3, \
  php7.3-xml, \
- php7.3-zip
+ php7.3-zip, \
+ smarty, \
+ snmp, \
+ sudo
 Description: Network, system, applicative supervision and monitoring - main app
  Centreon is a modular and flexible platform for network, system and
  applicative supervision and monitoring.
