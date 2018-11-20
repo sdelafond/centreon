@@ -5,6 +5,9 @@ include /usr/share/dpkg/default.mk
 %:
 	dh $@ # --with apache2
 
+override_dh_auto_clean:
+	rm -fr log debian/centreon-web
+
 override_dh_auto_build:
 
 override_dh_auto_install:
