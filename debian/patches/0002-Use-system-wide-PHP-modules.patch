@@ -1,0 +1,24 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Tue, 20 Nov 2018 11:00:34 +0100
+Subject: Use system-wide PHP modules
+
+---
+ bootstrap.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/bootstrap.php b/bootstrap.php
+index 0e2a023..28ed7e8 100644
+--- a/bootstrap.php
++++ b/bootstrap.php
+@@ -33,6 +33,11 @@
+  *
+  */
+ 
++require '/usr/share/php/Pimple/autoload.php';
++require '/usr/share/php/Symfony/Component/Finder/autoload.php';
++require '/usr/share/php/Symfony/Component/Filesystem/autoload.php';
++require '/usr/share/php/Psr/Container/autoload.php';
++
+ // Calling PHP-DI
+ use Pimple\Container;
+ 
