@@ -3,3 +3,4 @@
 0003-Use-smarty-PHP-modules-from-Debian.patch
 0004-Use-PHP-smarty-plugins-from-Debian.patch
 0005-Autoload-HTML_QuickForm.patch
+0006-Adapt-web-install-to-Debian-layout.patch
