@@ -3,8 +3,10 @@ Date: Tue, 20 Nov 2018 15:43:49 +0100
 Subject: Adapt web install to Debian layout
 
 ---
- www/install/install.conf.dist.php | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ www/install/install.conf.dist.php       | 8 ++++----
+ www/install/var/brokers/centreon-broker | 4 ++--
+ www/install/var/engines/centreon-engine | 8 ++++----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/www/install/install.conf.dist.php b/www/install/install.conf.dist.php
 index b3ad523..4a566c2 100644
@@ -24,3 +26,37 @@ index b3ad523..4a566c2 100644
 +$conf_centreon['centreon_plugins'] = "/usr/lib/nagios/plugins";
  ?>
 \ No newline at end of file
+diff --git a/www/install/var/brokers/centreon-broker b/www/install/var/brokers/centreon-broker
+index 4e49479..e12e80b 100644
+--- a/www/install/var/brokers/centreon-broker
++++ b/www/install/var/brokers/centreon-broker
+@@ -4,7 +4,7 @@
+ # column 4 => 0:directory, 1: file
+ # column 5 => default value
+ CENTREONBROKER_ETC;Centreon Broker etc directory;1;0;/etc/centreon-broker
+-CENTREONBROKER_CBMOD;Centreon Broker module (cbmod.so);0;1;/usr/lib64/nagios/cbmod.so
++CENTREONBROKER_CBMOD;Centreon Broker module (cbmod.so);0;1;/usr/lib/centreon-broker/cbmod.so
+ CENTREONBROKER_LOG;Centreon Broker log directory;1;0;/var/log/centreon-broker
+ CENTREONBROKER_VARLIB;Retention file directory;1;0;/var/lib/centreon-broker
+-CENTREONBROKER_LIB;Centreon Broker lib (*.so) directory;1;0;/usr/share/centreon/lib/centreon-broker
+\ No newline at end of file
++CENTREONBROKER_LIB;Centreon Broker lib (*.so) directory;1;0;/usr/lib/centreon-broker/centreon-broker
+\ No newline at end of file
+diff --git a/www/install/var/engines/centreon-engine b/www/install/var/engines/centreon-engine
+index a67e363..a12aabe 100644
+--- a/www/install/var/engines/centreon-engine
++++ b/www/install/var/engines/centreon-engine
+@@ -3,9 +3,9 @@
+ # column 3 => 0:optional, 1: required
+ # column 4 => 0:directory, 1: file, 2: other
+ # column 5 => default value
+-INSTALL_DIR_ENGINE;Centreon Engine directory;1;0;/usr/share/centreon-engine
++INSTALL_DIR_ENGINE;Centreon Engine directory;1;0;/usr/share/centreon
+ CENTREON_ENGINE_STATS_BINARY;Centreon Engine Stats binary;1;1;/usr/sbin/centenginestats
+ MONITORING_VAR_LIB;Centreon Engine var lib directory;1;0;/var/lib/centreon-engine
+-CENTREON_ENGINE_CONNECTORS;Centreon Engine Connector path;0;0;/usr/lib64/centreon-connector
+-CENTREON_ENGINE_LIB;Centreon Engine Library (*.so) directory;1;0;/usr/lib64/centreon-engine
+-CENTREONPLUGINS;Centreon Plugins Path;1;0;/usr/lib/centreon/plugins/
++CENTREON_ENGINE_CONNECTORS;Centreon Engine Connector path;0;0;/usr/bin
++CENTREON_ENGINE_LIB;Centreon Engine Library (*.so) directory;1;0;/usr/lib/centreon-engine
++CENTREONPLUGINS;Centreon Plugins Path;1;0;/usr/lib/nagios/plugins/
