@@ -3,4 +3,12 @@
 include /usr/share/dpkg/default.mk
 
 %:
-	dh $@ --with apache2
+	dh $@ # --with apache2
+
+override_dh_auto_build:
+
+override_dh_auto_install:
+	export DESTDIR=debian/centreon-web ; \
+	mkdir -p $${DESTDIR}/usr/share/perl5/centreon/centreon ;\
+	source 
+	. ./install.sh -f debian/varinstall-debian
