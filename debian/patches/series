@@ -2,3 +2,4 @@
 0002-Use-system-wide-PHP-modules.patch
 0003-Use-smarty-PHP-modules-from-Debian.patch
 0004-Use-PHP-smarty-plugins-from-Debian.patch
+0005-Autoload-HTML_QuickForm.patch

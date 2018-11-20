@@ -3,19 +3,27 @@ Date: Tue, 20 Nov 2018 11:22:10 +0100
 Subject: Use PHP smarty plugins from Debian
 
 ---
- www/api/class/centreon_configuration_broker.class.php            | 2 +-
- www/api/class/centreon_home_customview.class.php                 | 2 +-
+ www/api/class/centreon_configuration_broker.class.php            | 4 ++--
+ www/api/class/centreon_home_customview.class.php                 | 4 ++--
  www/include/common/common-Func.php                               | 4 ++--
  www/include/configuration/configObject/command/formArguments.php | 2 +-
  www/include/configuration/configObject/command/formMacros.php    | 2 +-
- www/install/steps/functions.php                                  | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+ www/install/steps/functions.php                                  | 4 ++--
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/www/api/class/centreon_configuration_broker.class.php b/www/api/class/centreon_configuration_broker.class.php
-index ef9b307..d8fd912 100644
+index ef9b307..bd17cc5 100644
 --- a/www/api/class/centreon_configuration_broker.class.php
 +++ b/www/api/class/centreon_configuration_broker.class.php
-@@ -92,7 +92,7 @@ class CentreonConfigurationBroker extends CentreonConfigurationObjects
+@@ -85,14 +85,14 @@ class CentreonConfigurationBroker extends CentreonConfigurationObjects
+          * Smarty template Init
+          */
+         $libDir = __DIR__ . "/../../../GPL_LIB";
+-        $smartyDir = '/usr/share/php/smarty3';
++        $smartyDir = '/usr/share/php/smarty3/';
+         require_once $smartyDir . 'Smarty.class.php';
+         $tpl = new \Smarty();
+         $tpl->compile_dir = $libDir . '/SmartyCache/compile';
          $tpl->config_dir = $libDir . '/SmartyCache/config';
          $tpl->cache_dir = $libDir . '/SmartyCache/cache';
          $tpl->template_dir = _CENTREON_PATH_ . '/www/include/configuration/configCentreonBroker/';
@@ -25,9 +33,18 @@ index ef9b307..d8fd912 100644
          $tpl->caching = 0;
          $tpl->compile_check = true;
 diff --git a/www/api/class/centreon_home_customview.class.php b/www/api/class/centreon_home_customview.class.php
-index 1ec323e..e21560e 100644
+index 1ec323e..db08efd 100644
 --- a/www/api/class/centreon_home_customview.class.php
 +++ b/www/api/class/centreon_home_customview.class.php
+@@ -185,7 +185,7 @@ class CentreonHomeCustomview extends CentreonWebService
+         require_once _CENTREON_PATH_ . "www/class/centreonWidget/Params/Compare.class.php";
+         require_once _CENTREON_PATH_ . "www/class/centreonWidget/Params/Sort.class.php";
+         require_once _CENTREON_PATH_ . "www/class/centreonWidget/Params/Date.class.php";
+-        $smartyDir = '/usr/share/php/smarty3';
++        $smartyDir = '/usr/share/php/smarty3/';
+         require_once $smartyDir . 'Smarty.class.php';
+ 
+         global $centreon;
 @@ -223,7 +223,7 @@ class CentreonHomeCustomview extends CentreonWebService
          $tpl->config_dir = $libDir . '/SmartyCache/config';
          $tpl->cache_dir = $libDir . '/SmartyCache/cache';
@@ -86,10 +103,17 @@ index c411e9c..0743c63 100644
  $tpl->compile_check = true;
  $tpl->force_compile = true;
 diff --git a/www/install/steps/functions.php b/www/install/steps/functions.php
-index 676abf9..f8871f7 100644
+index 676abf9..5a1c86f 100644
 --- a/www/install/steps/functions.php
 +++ b/www/install/steps/functions.php
-@@ -28,7 +28,7 @@ function getTemplate($dir)
+@@ -22,13 +22,13 @@ function isSqlComment($str)
+ function getTemplate($dir)
+ {
+     $libDir = __DIR__ . '/../../../GPL_LIB';
+-    $smartyDir = '/usr/share/php/smarty3';
++    $smartyDir = '/usr/share/php/smarty3/';
+     require_once $smartyDir . 'Smarty.class.php';
+     $template = new \Smarty();
      $template->compile_dir = $libDir . '/SmartyCache/compile';
      $template->config_dir = $libDir . '/SmartyCache/config';
      $template->cache_dir = $libDir . '/SmartyCache/cache';
