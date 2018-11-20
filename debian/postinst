@@ -4,7 +4,9 @@ adduser --system --home /var/lib/centreon --group centreon
 adduser centreon centreon-broker
 
 chgrp -R centreon /usr/share/centreon/www
-chmod g+w /usr/share/centreon/{www,filesUpload,installDir}
+chmod g+w /usr/share/centreon/www
+chmod g+w /usr/share/centreon/filesUpload
+chmod g+w /usr/share/centreon/installDir
 
 if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
   . /usr/share/apache2/apache2-maintscript-helper
