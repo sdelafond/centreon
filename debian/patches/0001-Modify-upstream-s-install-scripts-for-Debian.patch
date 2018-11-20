@@ -1,0 +1,363 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Tue, 20 Nov 2018 10:54:11 +0100
+Subject: Modify upstream's install scripts for Debian
+
+---
+ libinstall/CentCore.sh         |   6 +-
+ libinstall/CentPlugins.sh      |  16 +--
+ libinstall/CentPluginsTraps.sh |  28 +++---
+ libinstall/CentStorage.sh      |   6 +-
+ libinstall/CentWeb.sh          | 222 ++++++++++++++++++++---------------------
+ 5 files changed, 139 insertions(+), 139 deletions(-)
+
+diff --git a/libinstall/CentCore.sh b/libinstall/CentCore.sh
+index 2ac5f28..7072c4d 100755
+--- a/libinstall/CentCore.sh
++++ b/libinstall/CentCore.sh
+@@ -29,9 +29,9 @@ locate_centreon_generationdir
+ locate_centcore_bindir
+ locate_init_d
+ 
+-## Config Nagios
+-check_centreon_group
+-check_centreon_user
++# ## Config Nagios
++# check_centreon_group
++# check_centreon_user
+ 
+ ## Populate temporaty source directory
+ copyInTempFile 2>>$LOG_FILE
+diff --git a/libinstall/CentPlugins.sh b/libinstall/CentPlugins.sh
+index 462f4d7..15488eb 100755
+--- a/libinstall/CentPlugins.sh
++++ b/libinstall/CentPlugins.sh
+@@ -17,16 +17,16 @@ echo -e "$line"
+ check_tmp_disk_space
+ [ "$?" -eq 1 ] && purge_centreon_tmp_dir
+ 
+-## Where is nagios_pluginsdir
+-locate_plugindir
+-locate_centreon_plugins
++# ## Where is nagios_pluginsdir
++# locate_plugindir
++# locate_centreon_plugins
+ 
+-## Locale for sed
+-locate_centplugins_tmpdir
++# ## Locale for sed
++# locate_centplugins_tmpdir
+ 
+-## check centreon user and group
+-check_centreon_user
+-check_centreon_group
++# ## check centreon user and group
++# check_centreon_user
++# check_centreon_group
+ 
+ 
+ ## Populate temporary source directory
+diff --git a/libinstall/CentPluginsTraps.sh b/libinstall/CentPluginsTraps.sh
+index 53da379..aa3fdd9 100755
+--- a/libinstall/CentPluginsTraps.sh
++++ b/libinstall/CentPluginsTraps.sh
+@@ -17,22 +17,22 @@ echo -e "$line"
+ check_tmp_disk_space
+ [ "$?" -eq 1 ] && purge_centreon_tmp_dir
+ 
+-## Where is nagios_pluginsdir
+-locate_plugindir
+-locate_centreon_plugins
++# ## Where is nagios_pluginsdir
++# locate_plugindir
++# locate_centreon_plugins
+ 
+-## Locate centreon etc_dir
+-locate_centreon_etcdir
+-locate_centreon_rundir
+-locate_centreon_logdir
+-locate_snmp_etcdir
+-locate_init_d
+-locate_centreontrapd_bindir
++# ## Locate centreon etc_dir
++# locate_centreon_etcdir
++# locate_centreon_rundir
++# locate_centreon_logdir
++# locate_snmp_etcdir
++# locate_init_d
++# locate_centreontrapd_bindir
+ 
+-check_centreon_user
+-check_centreon_group
+-check_httpd_directory
+-check_user_apache
++# check_centreon_user
++# check_centreon_group
++# check_httpd_directory
++# check_user_apache
+ 
+ ## Populate temporaty source directory
+ copyInTempFile 2>>$LOG_FILE
+diff --git a/libinstall/CentStorage.sh b/libinstall/CentStorage.sh
+index cf2c87d..196e9e4 100755
+--- a/libinstall/CentStorage.sh
++++ b/libinstall/CentStorage.sh
+@@ -35,9 +35,9 @@ locate_cron_d
+ locate_centstorage_bindir
+ #locate_centstorage_libdir
+ locate_centstorage_rrddir
+-## Config Nagios
+-check_centreon_group
+-check_centreon_user
++# ## Config Nagios
++# check_centreon_group
++# check_centreon_user
+ 
+ ## Populate temporaty source directory
+ copyInTempFile 2>>$LOG_FILE 
+diff --git a/libinstall/CentWeb.sh b/libinstall/CentWeb.sh
+index 48d1613..8542746 100755
+--- a/libinstall/CentWeb.sh
++++ b/libinstall/CentWeb.sh
+@@ -28,78 +28,78 @@ locate_centreon_installdir
+ [ ! -d $INSTALL_DIR_CENTREON/examples ] && \
+     mkdir -p $INSTALL_DIR_CENTREON/examples
+ 
+-## locate or create Centreon log dir
+-locate_centreon_logdir
+-locate_centreon_etcdir
+-locate_centreon_bindir
+-locate_centreon_datadir
+-locate_centreon_generationdir
+-locate_centreon_varlib
+-
+-## Config pre-require
+-# define all necessary variables.
+-locate_rrdtool
+-locate_mail
+-locate_cron_d
+-locate_logrotate_d
+-locate_php_bin
+-locate_composer_bin
+-locate_pear
+-locate_perl
+-
+-## Check PHP version
+-check_php_version "${PHP_MIN_VERSION}"
+-[ "$?" -eq 1 ] && purge_centreon_tmp_dir && exit 1
+-check_php_modules
+-[ "$?" -eq 1 ] && purge_centreon_tmp_dir && exit 1
+-
+-## Config apache
+-check_httpd_directory
+-check_user_apache
+-check_group_apache
+-
+-## Ask for centreon user
+-check_centreon_group
+-check_centreon_user
+-
+-## Ask for monitoring engine user
+-check_engine_user
+-
+-## Ask for monitoring broker user
+-check_broker_user
+-
+-## Ask for plugins directory
+-locate_monitoringengine_log
+-locate_plugindir
+-locate_centreon_plugins
+-
+-## Add default value for centreon engine connector
+-if [ -z "$CENTREON_ENGINE_CONNECTORS" ]; then
+-    if [ "$(uname -i)" = "x86_64" ]; then
+-        CENTREON_ENGINE_CONNECTORS="/usr/lib64/centreon-connector"
+-    else
+-        CENTREON_ENGINE_CONNECTORS="/usr/lib/centreon-connector"
+-    fi
+-fi
+-
+-add_group "$WEB_USER" "$CENTREON_GROUP"
+-add_group "$MONITORINGENGINE_USER" "$CENTREON_GROUP"
+-get_primary_group "$MONITORINGENGINE_USER" "MONITORINGENGINE_GROUP"
+-add_group "$WEB_USER" "$MONITORINGENGINE_GROUP"
+-add_group "$CENTREON_USER" "$MONITORINGENGINE_GROUP"
+-add_group "$CENTREON_USER" "$WEB_GROUP"
+-
+-## Config Sudo
+-# I think this process move on CentCore install...
+-configureSUDO "$INSTALL_DIR_CENTREON/examples"
+-
+-## Config Apache
+-configureApache "$INSTALL_DIR_CENTREON/examples"
+-
+-## Ask for fpm-php service
+-locate_fpm_php_service
+-yes_no_default "$(gettext "Do you want to restart your FPM-PHP service ?")"
+-[ $? -eq 0 ] && ${SERVICE_BINARY} "${PHP_FPM_SERVICE}" restart &>/dev/null
++# ## locate or create Centreon log dir
++# locate_centreon_logdir
++# locate_centreon_etcdir
++# locate_centreon_bindir
++# locate_centreon_datadir
++# locate_centreon_generationdir
++# locate_centreon_varlib
++
++# ## Config pre-require
++# # define all necessary variables.
++# locate_rrdtool
++# locate_mail
++# locate_cron_d
++# locate_logrotate_d
++# locate_php_bin
++# locate_composer_bin
++# locate_pear
++# locate_perl
++
++# ## Check PHP version
++# check_php_version "${PHP_MIN_VERSION}"
++# [ "$?" -eq 1 ] && purge_centreon_tmp_dir && exit 1
++# check_php_modules
++# [ "$?" -eq 1 ] && purge_centreon_tmp_dir && exit 1
++
++# ## Config apache
++# check_httpd_directory
++# check_user_apache
++# check_group_apache
++
++# ## Ask for centreon user
++# check_centreon_group
++# check_centreon_user
++
++# ## Ask for monitoring engine user
++# check_engine_user
++
++# ## Ask for monitoring broker user
++# check_broker_user
++
++# ## Ask for plugins directory
++# locate_monitoringengine_log
++# locate_plugindir
++# locate_centreon_plugins
++
++# ## Add default value for centreon engine connector
++# if [ -z "$CENTREON_ENGINE_CONNECTORS" ]; then
++#     if [ "$(uname -i)" = "x86_64" ]; then
++#         CENTREON_ENGINE_CONNECTORS="/usr/lib64/centreon-connector"
++#     else
++#         CENTREON_ENGINE_CONNECTORS="/usr/lib/centreon-connector"
++#     fi
++# fi
++
++# add_group "$WEB_USER" "$CENTREON_GROUP"
++# add_group "$MONITORINGENGINE_USER" "$CENTREON_GROUP"
++# get_primary_group "$MONITORINGENGINE_USER" "MONITORINGENGINE_GROUP"
++# add_group "$WEB_USER" "$MONITORINGENGINE_GROUP"
++# add_group "$CENTREON_USER" "$MONITORINGENGINE_GROUP"
++# add_group "$CENTREON_USER" "$WEB_GROUP"
++
++# ## Config Sudo
++# # I think this process move on CentCore install...
++# configureSUDO "$INSTALL_DIR_CENTREON/examples"
++
++# ## Config Apache
++# configureApache "$INSTALL_DIR_CENTREON/examples"
++
++# ## Ask for fpm-php service
++# locate_fpm_php_service
++# yes_no_default "$(gettext "Do you want to restart your FPM-PHP service ?")"
++# [ $? -eq 0 ] && ${SERVICE_BINARY} "${PHP_FPM_SERVICE}" restart &>/dev/null
+ 
+ ## Create temps folder and copy all src into
+ copyInTempFile 2>>$LOG_FILE
+@@ -291,15 +291,15 @@ check_result $flg_error "$(gettext "Change right on") $MONITORINGENGINE_ETC"
+ ### Change right to broker_etcdir
+ log "INFO" "$(gettext "Change right on ") $BROKER_ETC"
+ flg_error=0
+-if [ -z "$BROKER_USER" ]; then
+-    BROKER_USER=$MONITORINGENGINE_USER
+-    get_primary_group "$BROKER_USER" "BROKER_GROUP"
+-else
+-    get_primary_group "$BROKER_USER" "BROKER_GROUP"
+-    add_group "$WEB_USER" "$BROKER_GROUP"
+-    add_group "$MONITORINGENGINE_USER" "$BROKER_GROUP"
+-    add_group "$BROKER_USER" "$CENTREON_GROUP"
+-fi
++# if [ -z "$BROKER_USER" ]; then
++#     BROKER_USER=$MONITORINGENGINE_USER
++#     get_primary_group "$BROKER_USER" "BROKER_GROUP"
++# else
++#     get_primary_group "$BROKER_USER" "BROKER_GROUP"
++#     add_group "$WEB_USER" "$BROKER_GROUP"
++#     add_group "$MONITORINGENGINE_USER" "$BROKER_GROUP"
++#     add_group "$BROKER_USER" "$CENTREON_GROUP"
++# fi
+ if [ "$MONITORINGENGINE_ETC" != "$BROKER_ETC" ]; then
+     $INSTALL_DIR/cinstall $cinstall_opts \
+         -g "$BROKER_GROUP" -d 775 \
+@@ -657,36 +657,36 @@ $INSTALL_DIR/cinstall $cinstall_opts -m 755 \
+     $TMP_DIR/src/lib/Centreon/ \
+     $INSTALL_DIR_CENTREON/lib/Centreon/ >> $LOG_FILE 2>&1
+ 
+-## Prepare to install all pear modules needed.
+-# use check_pear.php script
+-echo -e "\n$line"
+-echo -e "$(gettext "Pear Modules")"
+-echo -e "$line"
+-pear_module="0"
+-first=1
+-while [ "$pear_module" -eq 0 ] ; do
+-    check_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
+-    if [ "$?" -ne 0 ] ; then
+-            if [ "${PEAR_AUTOINST:-0}" -eq 0 ]; then
+-                if [ "$first" -eq 0 ] ; then
+-                    echo_info "$(gettext "Unable to upgrade PEAR modules. You seem to have a connection problem.")"
+-                fi
+-                yes_no_default "$(gettext "Do you want me to install/upgrade your PEAR modules")" "$yes"
+-                [ "$?" -eq 0 ] && PEAR_AUTOINST=1
+-            fi
+-        if [ "${PEAR_AUTOINST:-0}" -eq 1 ] ; then
+-            upgrade_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
+-                install_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
+-                PEAR_AUTOINST=0
+-                first=0
+-            else
+-            pear_module="1"
+-            fi
+-    else
+-        echo_success "$(gettext "All PEAR modules")" "$ok"
+-        pear_module="1"
+-    fi
+-done
++# ## Prepare to install all pear modules needed.
++# # use check_pear.php script
++# echo -e "\n$line"
++# echo -e "$(gettext "Pear Modules")"
++# echo -e "$line"
++# pear_module="0"
++# first=1
++# while [ "$pear_module" -eq 0 ] ; do
++#     check_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
++#     if [ "$?" -ne 0 ] ; then
++#             if [ "${PEAR_AUTOINST:-0}" -eq 0 ]; then
++#                 if [ "$first" -eq 0 ] ; then
++#                     echo_info "$(gettext "Unable to upgrade PEAR modules. You seem to have a connection problem.")"
++#                 fi
++#                 yes_no_default "$(gettext "Do you want me to install/upgrade your PEAR modules")" "$yes"
++#                 [ "$?" -eq 0 ] && PEAR_AUTOINST=1
++#             fi
++#         if [ "${PEAR_AUTOINST:-0}" -eq 1 ] ; then
++#             upgrade_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
++#                 install_pear_module "$INSTALL_VARS_DIR/$PEAR_MODULES_LIST"
++#                 PEAR_AUTOINST=0
++#                 first=0
++#             else
++#             pear_module="1"
++#             fi
++#     else
++#         echo_success "$(gettext "All PEAR modules")" "$ok"
++#         pear_module="1"
++#     fi
++# done
+ 
+ ## Create configfile for web install
+ createConfFile
