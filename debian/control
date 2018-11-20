@@ -58,6 +58,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  php7.3-xml,
  php7.3-zip,
  smarty,
+ smarty-gettext,
  snmp,
  sudo
 Recommends: mariadb-server
