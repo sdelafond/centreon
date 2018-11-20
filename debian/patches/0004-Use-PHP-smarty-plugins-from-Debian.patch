@@ -1,0 +1,100 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Tue, 20 Nov 2018 11:22:10 +0100
+Subject: Use PHP smarty plugins from Debian
+
+---
+ www/api/class/centreon_configuration_broker.class.php            | 2 +-
+ www/api/class/centreon_home_customview.class.php                 | 2 +-
+ www/include/common/common-Func.php                               | 4 ++--
+ www/include/configuration/configObject/command/formArguments.php | 2 +-
+ www/include/configuration/configObject/command/formMacros.php    | 2 +-
+ www/install/steps/functions.php                                  | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/www/api/class/centreon_configuration_broker.class.php b/www/api/class/centreon_configuration_broker.class.php
+index ef9b307..d8fd912 100644
+--- a/www/api/class/centreon_configuration_broker.class.php
++++ b/www/api/class/centreon_configuration_broker.class.php
+@@ -92,7 +92,7 @@ class CentreonConfigurationBroker extends CentreonConfigurationObjects
+         $tpl->config_dir = $libDir . '/SmartyCache/config';
+         $tpl->cache_dir = $libDir . '/SmartyCache/cache';
+         $tpl->template_dir = _CENTREON_PATH_ . '/www/include/configuration/configCentreonBroker/';
+-        $tpl->plugins_dir[] = $libDir . '/smarty-plugins';
++        $tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+ 
+         $tpl->caching = 0;
+         $tpl->compile_check = true;
+diff --git a/www/api/class/centreon_home_customview.class.php b/www/api/class/centreon_home_customview.class.php
+index 1ec323e..e21560e 100644
+--- a/www/api/class/centreon_home_customview.class.php
++++ b/www/api/class/centreon_home_customview.class.php
+@@ -223,7 +223,7 @@ class CentreonHomeCustomview extends CentreonWebService
+         $tpl->config_dir = $libDir . '/SmartyCache/config';
+         $tpl->cache_dir = $libDir . '/SmartyCache/cache';
+         $tpl->template_dir = _CENTREON_PATH_ . '/www/include/home/customViews/';
+-        $tpl->plugins_dir[] = $libDir . '/smarty-plugins';
++        $tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+         $tpl->caching = 0;
+         $tpl->compile_check = true;
+         $tpl->force_compile = true;
+diff --git a/www/include/common/common-Func.php b/www/include/common/common-Func.php
+index c88fcc9..30557c0 100644
+--- a/www/include/common/common-Func.php
++++ b/www/include/common/common-Func.php
+@@ -170,7 +170,7 @@ function initSmartyTpl($path = null, $tpl = null, $subDir = null)
+     $tpl->compile_dir = "../GPL_LIB/SmartyCache/compile";
+     $tpl->config_dir = "../GPL_LIB/SmartyCache/config";
+     $tpl->cache_dir = "../GPL_LIB/SmartyCache/cache";
+-    $tpl->plugins_dir[] = "../GPL_LIB/smarty-plugins";
++    $tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+     $tpl->caching = 0;
+     $tpl->compile_check = true;
+     $tpl->force_compile = true;
+@@ -186,7 +186,7 @@ function initSmartyTplForPopup($path = null, $tpl = null, $subDir = null, $centr
+     $tpl->compile_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/compile";
+     $tpl->config_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/config";
+     $tpl->cache_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/cache";
+-    $tpl->plugins_dir[] = _CENTREON_PATH_ . "/GPL_LIB/smarty-plugins";
++    $tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+     $tpl->caching = 0;
+     $tpl->compile_check = true;
+     $tpl->force_compile = true;
+diff --git a/www/include/configuration/configObject/command/formArguments.php b/www/include/configuration/configObject/command/formArguments.php
+index 5224294..ea0d905 100644
+--- a/www/include/configuration/configObject/command/formArguments.php
++++ b/www/include/configuration/configObject/command/formArguments.php
+@@ -113,7 +113,7 @@ $tpl->template_dir = $path;
+ $tpl->compile_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/compile";
+ $tpl->config_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/config";
+ $tpl->cache_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/cache";
+-$tpl->plugins_dir[] = _CENTREON_PATH_ . "/GPL_LIB/smarty-plugins";
++$tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+ $tpl->caching = 0;
+ $tpl->compile_check = true;
+ $tpl->force_compile = true;
+diff --git a/www/include/configuration/configObject/command/formMacros.php b/www/include/configuration/configObject/command/formMacros.php
+index c411e9c..0743c63 100644
+--- a/www/include/configuration/configObject/command/formMacros.php
++++ b/www/include/configuration/configObject/command/formMacros.php
+@@ -114,7 +114,7 @@ $tpl->template_dir = $path;
+ $tpl->compile_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/compile";
+ $tpl->config_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/config";
+ $tpl->cache_dir = _CENTREON_PATH_ . "/GPL_LIB/SmartyCache/cache";
+-$tpl->plugins_dir[] = _CENTREON_PATH_ . "/GPL_LIB/smarty-plugins";
++$tpl->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+ $tpl->caching = 0;
+ $tpl->compile_check = true;
+ $tpl->force_compile = true;
+diff --git a/www/install/steps/functions.php b/www/install/steps/functions.php
+index 676abf9..f8871f7 100644
+--- a/www/install/steps/functions.php
++++ b/www/install/steps/functions.php
+@@ -28,7 +28,7 @@ function getTemplate($dir)
+     $template->compile_dir = $libDir . '/SmartyCache/compile';
+     $template->config_dir = $libDir . '/SmartyCache/config';
+     $template->cache_dir = $libDir . '/SmartyCache/cache';
+-    $template->plugins_dir[] = $libDir . "/smarty-plugins";
++    $template->plugins_dir[] = '/usr/share/php/smarty3/plugins';
+     $template->template_dir = $dir;
+     $template->caching = 0;
+     $template->compile_check = true;
