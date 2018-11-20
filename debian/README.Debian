@@ -1,15 +1,23 @@
-mysql:
+In a mysql root shell:
+  use mysql;
   UPDATE user SET password=PASSWORD('some-strong-password'),plugin='' WHERE user='root'
+  FLUSH privileges;
 
-Specifiy LimitNOFILE=32000, then systemctl
-daemon-reload && systemctl restart mariadb
+Run the following commands as root:
 
-cp /usr/share/doc/centreon-web/examples/php-fpm-timezone /etc/php/7.3/fpm/conf.d/00-timezone.ini
-sed -i -e 's|^listen\s=.*|listen = 127.0.0.1:9000|' /etc/php/7.3/fpm/pool.d/www.conf
-systemctl restart php7.3-fpm
+  mkdir -p /etc/systemd/sytem/mariadb.service.d
+  echo -e 'FIXMEsection\nLimitNOFILE=32000' > /etc/systemd/sytem/mariadb.service.d/limit-number-files.conf
+  systemctl daemon-reload
+  systemctl restart mariadb
 
-a2enmod proxy_fcgi setenvif proxy rewrite
-a2enconf centreon
-systemctl restart apache2
+  cp /usr/share/doc/centreon-web/examples/php-fpm-timezone /etc/php/7.3/fpm/conf.d/00-timezone.ini
+  sed -i -e 's|^listen\s=.*|listen = 127.0.0.1:9000|' /etc/php/7.3/fpm/pool.d/www.conf
+  systemctl restart php7.3-fpm
 
- -- Sebastien Delafond <seb@debian.org>, Tue, 20 Nov 2018 18:09:34 +0100
+  a2enmod proxy_fcgi setenvif proxy rewrite
+  a2enconf centreon
+  systemctl restart apache2
+
+You can then visit http://localhost/centron
+
+ -- Sebastien Delafond <seb@debian.org>, Tue, 20 Nov 2018 18:42:48 +0100
