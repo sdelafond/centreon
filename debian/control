@@ -30,7 +30,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, \
  libdigest-sha-perl, \
  libgd-perl, \
  librrds-perl, \
- mariadb-server, \
  monitoring-plugins-basic, \
  monitoring-plugins-common, \
  monitoring-plugins-standard, \
@@ -61,6 +60,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, \
  smarty, \
  snmp, \
  sudo
+Recommends: mariadb-server
 Description: Network, system, applicative supervision and monitoring - main app
  Centreon is a modular and flexible platform for network, system and
  applicative supervision and monitoring.
