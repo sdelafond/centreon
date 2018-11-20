@@ -86,7 +86,7 @@ index 0743c63..2efbeee 100644
  $tpl->compile_check = true;
  $tpl->force_compile = true;
 diff --git a/www/install/steps/functions.php b/www/install/steps/functions.php
-index 5a1c86f..f1493ec 100644
+index 5a1c86f..d9d47a4 100644
 --- a/www/install/steps/functions.php
 +++ b/www/install/steps/functions.php
 @@ -28,7 +28,7 @@ function getTemplate($dir)
@@ -94,7 +94,7 @@ index 5a1c86f..f1493ec 100644
      $template->config_dir = $libDir . '/SmartyCache/config';
      $template->cache_dir = $libDir . '/SmartyCache/cache';
 -    $template->plugins_dir[] = '/usr/share/php/smarty3/plugins';
-+    $template.addPluginsDir('/usr/share/php/smarty3/plugins');
++    $template->addPluginsDir('/usr/share/php/smarty3/plugins');
      $template->template_dir = $dir;
      $template->caching = 0;
      $template->compile_check = true;
