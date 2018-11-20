@@ -2,11 +2,11 @@ Source: centreon-web
 Section: net
 Priority: optional
 Maintainer: Sebastien Delafond <seb@debian.org>
-Build-Depends: debhelper (>= 11), dh-apache2, \
- bsd-mail, \
- composer, \
- rrdtool, \
- php7.3, \
+Build-Depends: debhelper (>= 11), dh-apache2,
+ bsd-mail,
+ composer,
+ rrdtool,
+ php7.3,
  php-pear
 Standards-Version: 4.2.1
 Homepage: https://github.com/centreon/centreon-web
@@ -15,50 +15,50 @@ Vcs-Git: https://salsa.debian.org/debian/centreon.git
 
 Package: centreon-web
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, \
- adduser, \
- apache2, \
- bsd-mailx, \
- centreon-broker, \
- composer, \
- gettext, \
- libapache2-mod-php7.3, \
- libconfig-inifiles-perl, \
- libcrypt-des-perl, \
- libdbd-mysql-perl, \
- libdigest-hmac-perl, \
- libdigest-sha-perl, \
- libgd-perl, \
- librrds-perl, \
- monitoring-plugins-basic, \
- monitoring-plugins-common, \
- monitoring-plugins-standard, \
- nagios-snmp-plugins, \
- php-date, \
- php-db, \
- php-pear, \
- php-pimple, \
- php-psr-container, \
- php-symfony-filesystem, \
- php-symfony-finder, \
- php-symfony-yaml, \
- php7.3, \
- php7.3-curl, \
- php7.3-fpm, \
- php7.3-gd, \
- php7.3-intl, \
- php7.3-json, \
- php7.3-ldap, \
- php7.3-mbstring, \
- php7.3-mysql, \
- php7.3-opcache, \
- php7.3-readline, \
- php7.3-snmp, \
- php7.3-sqlite3, \
- php7.3-xml, \
- php7.3-zip, \
- smarty, \
- snmp, \
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ adduser,
+ apache2,
+ bsd-mailx,
+ centreon-broker,
+ composer,
+ gettext,
+ libapache2-mod-php7.3,
+ libconfig-inifiles-perl,
+ libcrypt-des-perl,
+ libdbd-mysql-perl,
+ libdigest-hmac-perl,
+ libdigest-sha-perl,
+ libgd-perl,
+ librrds-perl,
+ monitoring-plugins-basic,
+ monitoring-plugins-common,
+ monitoring-plugins-standard,
+ nagios-snmp-plugins,
+ php-date,
+ php-db,
+ php-pear,
+ php-pimple,
+ php-psr-container,
+ php-symfony-filesystem,
+ php-symfony-finder,
+ php-symfony-yaml,
+ php7.3,
+ php7.3-curl,
+ php7.3-fpm,
+ php7.3-gd,
+ php7.3-intl,
+ php7.3-json,
+ php7.3-ldap,
+ php7.3-mbstring,
+ php7.3-mysql,
+ php7.3-opcache,
+ php7.3-readline,
+ php7.3-snmp,
+ php7.3-sqlite3,
+ php7.3-xml,
+ php7.3-zip,
+ smarty,
+ snmp,
  sudo
 Recommends: mariadb-server
 Description: Network, system, applicative supervision and monitoring - main app
