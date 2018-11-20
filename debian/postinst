@@ -3,6 +3,9 @@
 adduser --system --home /var/lib/centreon --group centreon
 adduser centreon centreon-broker
 
+# FIXME: move smarty-cache somewhere under /var/lib/centreon
+chown -R www-data /usr/share/centreon/www/GPL_LIB/SmartyCache
+
 if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
   . /usr/share/apache2/apache2-maintscript-helper
   apache2_invoke disconf php7.3
