@@ -3,18 +3,20 @@ Date: Tue, 20 Nov 2018 15:12:59 +0100
 Subject: Autoload HTML_QuickForm
 
 ---
- composer.json | 25 +------------------------
- 1 file changed, 1 insertion(+), 24 deletions(-)
+ composer.json | 27 ++-------------------------
+ 1 file changed, 2 insertions(+), 25 deletions(-)
 
 diff --git a/composer.json b/composer.json
-index a8ddfb8..a1dd72a 100644
+index a8ddfb8..9aa4bd1 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -11,33 +11,10 @@
+@@ -10,34 +10,11 @@
+         }
      ],
      "repositories": [
-         { "packagist.org": false },
+-        { "packagist.org": false },
 -        { "type": "composer", "url": "http://ci.int.centreon.com" }
++        { "packagist.org": false }
      ],
      "config": {
          "secure-http": false
