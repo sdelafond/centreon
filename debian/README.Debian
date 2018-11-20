@@ -5,8 +5,8 @@ In a mysql root shell:
 
 Run the following commands as root:
 
-  mkdir -p /etc/systemd/sytem/mariadb.service.d
-  echo -e 'FIXMEsection\nLimitNOFILE=32000' > /etc/systemd/sytem/mariadb.service.d/limit-number-files.conf
+  mkdir -p /etc/systemd/system/mariadb.service.d
+  echo -e '[Service]\nLimitNOFILE=32000' > /etc/systemd/system/mariadb.service.d/limit-number-files.conf
   systemctl daemon-reload
   systemctl restart mariadb
 
@@ -20,4 +20,4 @@ Run the following commands as root:
 
 You can then visit http://localhost/centron
 
- -- Sebastien Delafond <seb@debian.org>, Tue, 20 Nov 2018 18:42:48 +0100
+ -- Sebastien Delafond <seb@debian.org>, Tue, 20 Nov 2018 18:52:32 +0100
