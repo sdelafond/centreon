@@ -5,7 +5,7 @@ include /usr/share/dpkg/default.mk
 DESTDIR := debian/centreon-web
 
 %:
-	dh $@ # --with apache2
+	dh $@ --with apache2
 
 override_dh_auto_clean:
 	rm -fr log debian/centreon-web
@@ -13,6 +13,7 @@ override_dh_auto_clean:
 override_dh_auto_build:
 
 override_dh_auto_install:
+	# FIXME
 	mkdir -p $(DESTDIR)/usr/share/perl5/centreon/centreon
 	export DESTDIR=$(DESTDIR) ; bash ./install.sh -f debian/varinstall-debian
 	rm -f $(DESTDIR)/usr/share/centreon/filesUpload
