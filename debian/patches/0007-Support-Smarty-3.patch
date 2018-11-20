@@ -8,7 +8,8 @@ Subject: Support Smarty 3
  www/include/common/common-Func.php                               | 4 ++--
  www/include/configuration/configObject/command/formArguments.php | 2 +-
  www/include/configuration/configObject/command/formMacros.php    | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ www/install/steps/functions.php                                  | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/www/api/class/centreon_configuration_broker.class.php b/www/api/class/centreon_configuration_broker.class.php
 index bd17cc5..c8433b6 100644
@@ -84,3 +85,16 @@ index 0743c63..2efbeee 100644
  $tpl->caching = 0;
  $tpl->compile_check = true;
  $tpl->force_compile = true;
+diff --git a/www/install/steps/functions.php b/www/install/steps/functions.php
+index 5a1c86f..f1493ec 100644
+--- a/www/install/steps/functions.php
++++ b/www/install/steps/functions.php
+@@ -28,7 +28,7 @@ function getTemplate($dir)
+     $template->compile_dir = $libDir . '/SmartyCache/compile';
+     $template->config_dir = $libDir . '/SmartyCache/config';
+     $template->cache_dir = $libDir . '/SmartyCache/cache';
+-    $template->plugins_dir[] = '/usr/share/php/smarty3/plugins';
++    $template.addPluginsDir('/usr/share/php/smarty3/plugins');
+     $template->template_dir = $dir;
+     $template->caching = 0;
+     $template->compile_check = true;
