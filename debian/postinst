@@ -3,7 +3,7 @@
 adduser --system --home /var/lib/centreon --group centreon
 adduser centreon centreon-broker
 
-chown -R www-data:centreon /usr/share/centreon
+chown -R www-data:centreon /usr/share/centreon /etc/centreon /var/log/centreon
 chmod g+w /usr/share/centreon/www
 chmod g+w /usr/share/centreon/filesUpload
 chmod g+w /usr/share/centreon/installDir
@@ -14,9 +14,5 @@ if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
   apache2_invoke enconf php7.3-fpm
   # FIXME: enmod & dismod ?
 fi
-
-# FIXME: add date.timezone = Europe/Paris to
-# /etc/php/7.3/fpm/conf.d/00-centreon.ini ?
-
 
 #DEBHELPER#
