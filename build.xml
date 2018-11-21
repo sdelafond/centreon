@@ -11,6 +11,10 @@
     <coverage-setup database="${builddir}/coverage.db">
       <fileset dir="src">
         <include name="**/*.php"/>
+        <excludes name="Centreon/Domain/Entity/*" />
+        <excludes name="CentreonRemote/Domain/Resources/*" />
+        <excludes name="**/Tests/*Test.php" />
+        <excludes name="**/Tests/**/*Test.php" />
       </fileset>
     </coverage-setup>
     <phpunit bootstrap="tests/php/bootstrap.php" codecoverage="true">
