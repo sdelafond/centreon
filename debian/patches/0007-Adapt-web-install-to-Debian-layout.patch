@@ -27,7 +27,7 @@ index b3ad523..4a566c2 100644
  ?>
 \ No newline at end of file
 diff --git a/www/install/var/brokers/centreon-broker b/www/install/var/brokers/centreon-broker
-index 4e49479..e12e80b 100644
+index 4e49479..b845b95 100644
 --- a/www/install/var/brokers/centreon-broker
 +++ b/www/install/var/brokers/centreon-broker
 @@ -4,7 +4,7 @@
@@ -40,7 +40,7 @@ index 4e49479..e12e80b 100644
  CENTREONBROKER_VARLIB;Retention file directory;1;0;/var/lib/centreon-broker
 -CENTREONBROKER_LIB;Centreon Broker lib (*.so) directory;1;0;/usr/share/centreon/lib/centreon-broker
 \ No newline at end of file
-+CENTREONBROKER_LIB;Centreon Broker lib (*.so) directory;1;0;/usr/lib/centreon-broker/centreon-broker
++CENTREONBROKER_LIB;Centreon Broker lib (*.so) directory;1;0;/usr/lib/centreon-broker/modules
 \ No newline at end of file
 diff --git a/www/install/var/engines/centreon-engine b/www/install/var/engines/centreon-engine
 index a67e363..a12aabe 100644
