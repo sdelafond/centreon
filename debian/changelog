@@ -1,6 +1,6 @@
-centreon-web (18.10.0-2~1.gbp0beb42) UNRELEASED; urgency=medium
+centreon-web (18.10.0-2~2.gbp967ffe) UNRELEASED; urgency=medium
 
-  ** SNAPSHOT build @0beb420f3c7a48281615adee4071fb775b417b12 **
+  ** SNAPSHOT build @967ffe3099f089b0f1b92d25931053106ea36131 **
 
   [ Sébastien Delafond ]
   * add more dependencies
@@ -11,8 +11,45 @@ centreon-web (18.10.0-2~1.gbp0beb42) UNRELEASED; urgency=medium
   * meh
   * foo
   * Modify upstream's install scripts for Debian
+  * Fix debian/rules
+  * Run bash explicitely
+  * Modify upstream's install scripts for Debian
+  * Update changelog for 18.10.0-2~1.gbp0beb42 release
+  * clean
+  * build-dep
+  * Use system-wide PHP modules
+  * Use smarty PHP modules from Debian
+  * smarty-gettext
+  * Use PHP smarty plugins from Debian
+  * smarty3
+  * Maintainer & Uploaders, some postinst, plus basic install fixes
+  * Autoload HTML_QuickForm
+  * More postinst & basic install fixes
+  * Adapt web install to Debian layout
+  * README.Debian
+  * Writable dirs in /usr/share/centreon... Come on...
+  * Do not assume bash in debian/rules (works OK in docker)
+  * Rediff patches
+  * dh_apache2, some FPM config
+  * postinst
+  * Try to use FPM socket directly
+  * README.Debian & install fixes
+  * README.Debian
+  * Support Smarty 3
+  * Back to FPM on TCP port
+  * Hack attack for weak build system
+  * readme
+  * readme
+  * Rediff patches
+  * Rediff patches
+  * README.Debian
+  * README.Debian
+  * Rediff patches
+  * README.Debian & postinst
+  * Rediff patches
+  * Start working on dynamically gathering PHP and NPM dependencies during the build
 
- -- Sebastien Delafond <seb@debian.org>  Tue, 20 Nov 2018 10:54:51 +0100
+ -- Sebastien Delafond <seb@debian.org>  Fri, 14 Dec 2018 10:24:36 +0100
 
 centreon-web (18.10.0-1) unstable; urgency=medium
 
