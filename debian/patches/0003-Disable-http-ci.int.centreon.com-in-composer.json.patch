@@ -1,0 +1,22 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Fri, 14 Dec 2018 10:32:40 +0100
+Subject: Disable http://ci.int.centreon.com in composer.json
+
+---
+ composer.json | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/composer.json b/composer.json
+index a8ddfb8..e996bb4 100644
+--- a/composer.json
++++ b/composer.json
+@@ -10,8 +10,7 @@
+         }
+     ],
+     "repositories": [
+-        { "packagist.org": false },
+-        { "type": "composer", "url": "http://ci.int.centreon.com" }
++        { "packagist.org": false }
+     ],
+     "config": {
+         "secure-http": false

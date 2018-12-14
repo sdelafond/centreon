@@ -1,2 +1,6 @@
 0001-Modify-upstream-s-install-scripts-for-Debian.patch
 0007-Adapt-web-install-to-Debian-layout.patch
+0003-Disable-http-ci.int.centreon.com-in-composer.json.patch
+0004-Remove-dev-dependencies-from-composer.json.patch
+0005-Enable-packagist.org-in-composer.json.patch
+0006-more-composer.json.patch

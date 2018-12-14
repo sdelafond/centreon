@@ -1,0 +1,21 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Fri, 14 Dec 2018 10:39:02 +0100
+Subject: Enable packagist.org in composer.json
+
+---
+ composer.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/composer.json b/composer.json
+index ca16c6d..1535e5f 100644
+--- a/composer.json
++++ b/composer.json
+@@ -10,7 +10,7 @@
+         }
+     ],
+     "repositories": [
+-        { "packagist.org": false }
++        { "packagist.org": true }
+     ],
+     "config": {
+         "secure-http": false

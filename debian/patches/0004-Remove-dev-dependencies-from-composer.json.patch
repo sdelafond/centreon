@@ -1,0 +1,29 @@
+From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
+Date: Fri, 14 Dec 2018 10:36:37 +0100
+Subject: Remove -dev dependencies from composer.json
+
+---
+ composer.json | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/composer.json b/composer.json
+index e996bb4..ca16c6d 100644
+--- a/composer.json
++++ b/composer.json
+@@ -15,16 +15,6 @@
+     "config": {
+         "secure-http": false
+     },
+-    "require-dev": {
+-        "behat/behat": "^3.3",
+-        "behat/mink": "^1.7",
+-        "phpunit/phpunit": "^4.8",
+-        "squizlabs/php_codesniffer": "^2.9",
+-        "phing/phing": "^2.13",
+-        "behat/mink-extension": "^2.2",
+-        "behat/mink-selenium2-driver": "^1.3",
+-        "centreon/centreon-test-lib": "dev-master"
+-    },
+     "require": {
+         "php": ">=7.1.3",
+         "ext-phar": "*",
