@@ -57,6 +57,7 @@ PHP_MODULES_LIST="php_modules.lst"
 # DEFAULT_BROKER_ETC="${DESTDIR}/etc/centreon-broker"
 # DEFAULT_BROKER_INIT_SCRIPT="cbd"
 
+BIN_COMPOSER="/usr/bin/composer"
 INSTALL_DIR_CENTREON="${DESTDIR}/usr/share/centreon"
 CENTREON_LOG="${DESTDIR}/var/log/centreon"
 CENTREON_ETC="${DESTDIR}/etc/centreon"
