@@ -6,6 +6,7 @@ Uploaders: Sebastien Delafond <seb@debian.org>
 Build-Depends: debhelper (>= 11), dh-apache2,
  bsd-mailx,
  composer,
+ npm,
  rrdtool,
  php7.3,
  php7.3-curl,

@@ -27,4 +27,5 @@ override_dh_auto_install:
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/generateSqlLite
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/import-mysql-indexes
 	cd $(DESTDIR)/usr/share/centreon ; composer install --no-dev --optimize-autoloader
+	cd $(DESTDIR)/usr/share/centreon ; npm install ; npm run build ; npm prune --production
 	find $(DESTDIR) -type f | xargs sed -i -e "s|$(DESTDIR)||g"
