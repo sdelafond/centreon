@@ -8,6 +8,7 @@ Build-Depends: debhelper (>= 11), dh-apache2,
  composer,
  rrdtool,
  php7.3,
+ php7.3-curl,
  php-pear
 Standards-Version: 4.2.1
 Homepage: https://github.com/centreon/centreon-web
