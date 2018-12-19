@@ -1,19 +1,29 @@
 From: =?utf-8?q?S=C3=A9bastien_Delafond?= <sdelafond@gmail.com>
-Date: Fri, 14 Dec 2018 10:36:37 +0100
-Subject: Remove -dev dependencies from composer.json
+Date: Fri, 14 Dec 2018 10:32:40 +0100
+Subject: composer.json changes
 
+  - disable non-existent http://ci.int.centreon.com
+  - remove -dev dependencies
+  - enable packagist.org
 ---
- composer.json | 10 ----------
- 1 file changed, 10 deletions(-)
+ composer.json | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
 diff --git a/composer.json b/composer.json
-index e996bb4..ca16c6d 100644
+index a8ddfb8..dde4c0d 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -15,16 +15,6 @@
-     "config": {
-         "secure-http": false
-     },
+@@ -9,23 +9,6 @@
+             "email": "kduret@centreon.com"
+         }
+     ],
+-    "repositories": [
+-        { "packagist.org": false },
+-        { "type": "composer", "url": "http://ci.int.centreon.com" }
+-    ],
+-    "config": {
+-        "secure-http": false
+-    },
 -    "require-dev": {
 -        "behat/behat": "^3.3",
 -        "behat/mink": "^1.7",
