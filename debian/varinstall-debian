@@ -11,6 +11,8 @@ CENTREON_CONF="${DESTDIR}/etc/centreon.conf"
 #use $CENTREON_ETC/centreon.conf
 PEAR_MODULES_LIST="pear.lst"
 PHP_MODULES_LIST="php_modules.lst"
+INIT_D="/etc/init.d"
+CRON_D="/etc/cron.d"
 
 # DEFAULT_INSTALL_DIR_NAGIOS="${DESTDIR}/usr/local/nagios"
 # DEFAULT_INSTALL_DIR_CENTREON="${DESTDIR}/usr/local/centreon"

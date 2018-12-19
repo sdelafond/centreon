@@ -13,7 +13,13 @@ override_dh_auto_clean:
 override_dh_auto_build:
 
 override_dh_auto_install:
+	# FIXME
+	mkdir -p $(DESTDIR)/usr/share/perl5
 	export DESTDIR=$(DESTDIR) ; bash ./install.sh -f debian/varinstall-debian
+	cp $(DESTDIR)/usr/share/centreon/examples/centcore.init.d debian/centcore.init
+	cp $(DESTDIR)/usr/share/centreon/examples/centcore.default debian/centcore.default
+	dh_installinit --name=centcore
+	rm debian/centcore.init debian/centcore.default
 	rm -f $(DESTDIR)/usr/share/centreon/filesUpload
 	rm -f $(DESTDIR)/usr/share/centreon/installDir
 	mkdir $(DESTDIR)/usr/share/centreon/filesUpload
