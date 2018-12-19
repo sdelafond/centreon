@@ -13,8 +13,6 @@ override_dh_auto_clean:
 override_dh_auto_build:
 
 override_dh_auto_install:
-	# FIXME
-	mkdir -p $(DESTDIR)/usr/share/perl5/centreon/centreon
 	export DESTDIR=$(DESTDIR) ; bash ./install.sh -f debian/varinstall-debian
 	rm -f $(DESTDIR)/usr/share/centreon/filesUpload
 	rm -f $(DESTDIR)/usr/share/centreon/installDir
