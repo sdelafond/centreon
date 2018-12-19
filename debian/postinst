@@ -3,8 +3,17 @@
 adduser --system --home /var/lib/centreon --group centreon
 adduser centreon centreon-broker
 
-chown -R www-data:centreon /usr/share/centreon /etc/centreon /var/log/centreon
-chmod g+w /usr/share/centreon/www
+chown -R centreon:www-data /usr/share/centreon /etc/centreon /var/log/centreon
+chmod -R g+w /usr/share/centreon /etc/centreon /var/log/centreon
+
+chown -R centreon-engine:centreon-broker /var/lib/centreon
+chmod -R g+w /var/lib/centreon
+
+# until we can get those in the centreon-broker and centreon-engine
+# packages
+chgrp -R www-data /etc/centreon-broker /etc/centreon-engine
+chmod -R g+w /etc/centreon-broker /etc/centreon-engine
+
 chmod g+w /usr/share/centreon/filesUpload
 chmod g+w /usr/share/centreon/installDir
 
