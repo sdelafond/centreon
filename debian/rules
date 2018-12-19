@@ -20,12 +20,11 @@ override_dh_auto_install:
 	rm -f $(DESTDIR)/usr/share/centreon/installDir
 	mkdir $(DESTDIR)/usr/share/centreon/filesUpload
 	mkdir $(DESTDIR)/usr/share/centreon/installDir
+	cp package.json $(DESTDIR)/usr/share/centreon
+	cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install && npm run build # ; npm prune --production
 	sed -i -e 's|@CENTREON_ETC@|/etc/centreon|' -e 's|@CENTREON_LOG@|/var/log/centreon|' -e 's|@CENTREON_VARLIB@|/var/lib/centreon|' $(DESTDIR)/usr/share/centreon/config/centreon.config.php
-	sed -i -e 's/_CENTREON_PATH_PLACEHOLDER_/centreon/g' $(DESTDIR)/usr/share/centreon/www/index.php
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/centreon
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/export-mysql-indexes
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/generateSqlLite
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/import-mysql-indexes
-	cp package.json $(DESTDIR)/usr/share/centreon
-	cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install && npm run build # ; npm prune --production
-	find $(DESTDIR) -type f -print0 | xargs -0 sed -i -e "s|$(DESTDIR)||g"
+	find $(DESTDIR) -type f -print0 | xargs -0 sed -i -e "s|$(DESTDIR)||g" -e 's/_CENTREON_PATH_PLACEHOLDER_/centreon/g'
