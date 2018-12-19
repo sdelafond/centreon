@@ -16,9 +16,39 @@ To finalize the installation, run the following commands as root:
   a2enmod proxy_fcgi setenvif proxy rewrite
   systemctl restart apache2
 
-You can then visit http://localhost/centron.
+After that, install the official centreon plugins since they are not
+yet packaged:
 
-If the setup wizard times out when creating the database, just visit
-http://localhost/centron again and complete the "upgrade" process.
+  git clone https://github.com/centreon/centreon-plugins.git
+  cd centreon-plugins
+  chmod +x centreon_plugins.pl
+  cp -R * /usr/lib/centreon/plugins
 
- -- Sebastien Delafond <seb@debian.org>, Wed, 21 Nov 2018 14:18:39 +0100
+You can then visit http://localhost/centron to launch the setup
+wizard. All pre-filled values should be correct, except your database
+spec which should be changed to host=localhost, port=3306,
+password=<the-one-specified-above>.
+The wizard takes a long time to partition the DB; if it eventually
+times out, just visit http://localhost/centron again and complete the
+"upgrade" process.
+
+After the wizard finishes, you will need to edit the admin user that
+was just created. Log in to the UI, navigate to
+Configuration->Users->Contacts/Users, and add at least one "Host
+Notification Commands" command and one "Service Notification
+Commands": without those, centengine won't start. Also note that you
+can't save any user modification without re-entering the password
+twice on the second "Centreon Authentication" tab.
+
+Then, follow the instructions in this bug report (the only difference
+is that the "Export" functionality is directly available from the
+Configuration->Pollers->Pollers configuration panel as an "Export
+configuration" button:
+
+  https://github.com/centreon/centreon/issues/4223#issuecomment-253250128
+
+After you've saved those admin user changes, manually restart the
+following services via systemctl: cbd, centengine, centcore.
+
+ -- Sebastien Delafond <seb@debian.org>, Thu, 20 Dec 2018 10:32:37 +0100
+
