@@ -3,8 +3,8 @@
 namespace CentreonRemote\Domain\Service;
 
 use Centreon\Domain\Repository\InformationsRepository;
+use Centreon\Infrastructure\Service\CentreonDBManagerService;
 use Curl\Curl;
-use Pimple\Container;
 
 class NotifyMasterService
 {
@@ -16,7 +16,6 @@ class NotifyMasterService
     const CANT_CONNECT = 'Could not connect';
     const TIMEOUT = 'Timeout';
     const UNKNOWN_ERROR = 'Unknown Error';
-    const WRONG_IP = 'Wrong IP';
     const NO_APP_KEY = 'No Application Key found';
 
     /**
@@ -26,39 +25,58 @@ class NotifyMasterService
     const FAIL = 'fail';
 
     /**
-     * @var Container
+     * @var CentreonDBManagerService
      */
-    private $di;
+    private $dbManager;
+
+    /**
+     * @var Curl
+     */
+    private $curl;
+
+    /**
+     * @return void
+     */
+    public function setCurl(Curl $curl): void
+    {
+        $this->curl = $curl;
+    }
+
+    /**
+     * @return Curl
+     */
+    public function getCurl(): Curl
+    {
+        return $this->curl;
+    }
 
     /**
      * NotifyMasterService constructor.
+     *
+     * @param CentreonDBManagerService $dbManager
      */
-    public function __construct(Container $di)
+    public function __construct(CentreonDBManagerService $dbManager)
     {
-        $this->di = $di;
+        $this->dbManager = $dbManager;
     }
 
     /**
      * Ping the master IP requesting to be slave for it.
-     * @param string $ip
+     * @param string $ip The IP address of the master
+     * @param boolean $noCheckCertificate To do not check SLL CA on master
+     * @param array $data The information for the master how to contact the remote
      * @return array
      * @throws \ErrorException
      */
-    public function pingMaster($ip)
+    public function pingMaster($ip, $data, $noCheckCertificate = false, $noProxy = false)
     {
-        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-            return [
-                'status' => self::FAIL,
-                'details' => self::WRONG_IP
-            ];
-        }
 
         $url = "{$ip}/centreon/api/external.php?object=centreon_remote_server&action=addToWaitList";
-        $repository = $this->getDi()['centreon.db-manager']->getRepository(InformationsRepository::class);
+        $repository = $this->dbManager->getRepository(InformationsRepository::class);
         $applicationKey = $repository->getOneByKey('appKey');
         $version = $repository->getOneByKey('version');
 
-        if (empty($applicationKey)){
+        if (empty($applicationKey)) {
             return [
                 'status' => self::FAIL,
                 'details' => self::NO_APP_KEY
@@ -69,12 +87,22 @@ class NotifyMasterService
             $curlData = [
                 'app_key' => $applicationKey->getValue(),
                 'version' => $version->getValue(),
+                'http_method' => $data['remoteHttpMethod'] ?? 'http',
+                'http_port' => $data['remoteHttpPort'] ?? '',
+                'no_check_certificate' => $data['remoteNoCheckCertificate'] ?? 0,
             ];
-            $curl = new Curl();
-            $curl->post($url, $curlData);
 
-            if ($curl->error) {
-                switch ($curl->error_code) {
+            if ($noCheckCertificate) {
+                $this->getCurl()->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+            }
+            if ($noProxy) {
+                $this->getCurl()->setOpt(CURLOPT_PROXY, false);
+            }
+
+            $this->getCurl()->post($url, $curlData);
+
+            if ($this->getCurl()->error) {
+                switch ($this->getCurl()->error_code) {
                     case 6:
                         $details = self::CANT_RESOLVE_HOST;
                         break;
@@ -102,10 +130,5 @@ class NotifyMasterService
         }
 
         return ['status' => self::SUCCESS];
-    }
-
-    private function getDi(): Container
-    {
-        return $this->di;
     }
 }

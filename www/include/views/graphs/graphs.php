@@ -37,7 +37,7 @@ if (!isset($centreon)) {
     exit();
 }
 
-require _CENTREON_PATH_ . '/www/class/centreonService.class.php';
+require_once(_CENTREON_PATH_ . '/www/class/centreonService.class.php');
 
 $serviceObj = new CentreonService($pearDB);
 $gmtObj = new CentreonGMT($pearDB);
@@ -126,12 +126,12 @@ if (isset($svc_id) &&
             $hostId = $serviceParameters['host_id'];
             $graphId = $hostId . '-' . $svc;
             $graphTitle = $fullName;
-        } else if (preg_match('/^(\d+);(\d+)/', $svc, $matches)) {
+        } elseif (preg_match('/^(\d+);(\d+)/', $svc, $matches)) {
             $hostId = $matches[1];
             $serviceId = $matches[2];
             $graphId = $hostId . '-' . $serviceId;
             $graphTitle = $serviceObj->getMonitoringFullName($serviceId, $hostId);
-        } else if (preg_match('/^(.+);(.+)/', $svc, $matches)) {
+        } elseif (preg_match('/^(.+);(.+)/', $svc, $matches)) {
             list($hostname, $serviceDescription) = explode(";", $svc);
             $hostId = getMyHostID($hostname);
             $serviceId = getMyServiceID($serviceDescription, $hostId);

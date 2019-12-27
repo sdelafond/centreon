@@ -5,12 +5,14 @@ namespace CentreonRemote\Application\Clapi;
 use Centreon\Domain\Repository\TaskRepository;
 use Centreon\Infrastructure\Service\CentcoreCommandService;
 use CentreonRemote\Infrastructure\Export\ExportCommitment;
-use Curl\Curl;
 use Pimple\Container;
 use Centreon\Infrastructure\Service\CentreonClapiServiceInterface;
 use Centreon\Domain\Entity\Task;
 use Centreon\Domain\Entity\Command;
 
+/**
+ * Manage worker queue with centcore (import/export tasks...)
+ */
 class CentreonWorker implements CentreonClapiServiceInterface
 {
 
@@ -35,83 +37,119 @@ class CentreonWorker implements CentreonClapiServiceInterface
     }
 
     /**
-     * Worker method to process task queue for import/export
-     * @return int
+     * Process task queue for import/export
+     *
+     * @return void
      */
-    public function processQueue()
+    public function processQueue(): void
     {
-        $datetime = (new \DateTime())->format("Y:m:d h:i:s");
-        echo "\n[{$datetime}] Checking for pending export tasks: ";
+        // check export tasks in database and execute these
+        $this->processExportTasks();
 
-        $tasks = $this->getDi()['centreon.db-manager']->getRepository(TaskRepository::class)->findExportTasks();
-        if (count($tasks) == 0) {
-            echo "None found";
-        } else {
-            foreach ($tasks as $x => $task) {
-                /*
-                 * mark task as being worked on
-                 */
-                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(),Task::STATE_PROGRESS);
+        // check import tasks in database and execute these
+        $this->processImportTasks();
+    }
 
-                $params = unserialize($task->getParams())['params'];
-                $commitment = new ExportCommitment($params['server'], $params['pollers']);
+    /**
+     * Execute export tasks which are store in task table
+     *
+     * @return void
+     */
+    private function processExportTasks(): void
+    {
+        $tasks = $this->getDi()[\Centreon\ServiceProvider::CENTREON_DB_MANAGER]
+            ->getRepository(TaskRepository::class)
+            ->findExportTasks() ?? [];
 
-                try {
-                   $this->getDi()['centreon_remote.export']->export($commitment);
-                } catch (\Exception $e) {
-                    echo $e->__toString()."\n";
-                }
+        echo date("Y-m-d H:i:s") . " - INFO - Checking for pending export tasks: "
+            . count($tasks) . " task(s) found.\n";
 
-                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(),Task::STATE_COMPLETED);
+        foreach (array_values($tasks) as $task) {
+            echo date("Y-m-d H:i:s") . " - INFO - Processing task #" . $task->getId() . "...\n";
+
+            /*
+             * mark task as being worked on
+             */
+            $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_PROGRESS);
+
+            $params = unserialize($task->getParams())['params'];
+            $commitment = new ExportCommitment($params['server'], $params['pollers']);
+
+            try {
+                $this->getDi()['centreon_remote.export']->export($commitment);
+
+                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_COMPLETED);
 
                 /**
                  * move export file
                  */
                 $cmd = new Command();
-                $compositeKey = $params['server'].':'.$task->getId();
-                $cmd->setCommandLine(Command::COMMAND_TRANSFER_EXPORT_FILES.$compositeKey);
+                $compositeKey = $params['server'] . ':' . $task->getId();
+                $cmd->setCommandLine(Command::COMMAND_TRANSFER_EXPORT_FILES . $compositeKey);
                 $cmdService = new CentcoreCommandService();
                 $cmdWritten = $cmdService->sendCommand($cmd);
-                
-                echo ($x ? ', ' : '') . "#" . $task->getId();
+
+                echo date("Y-m-d H:i:s") . " - INFO - Task #" . $task->getId() . " completed.\n";
+            } catch (\Exception $e) {
+                echo date("Y-m-d H:i:s") . " - ERROR - Task #" . $task->getId() . " failed.\n";
+                echo date("Y-m-d H:i:s") . " - ERROR - Error message: " . $e->getMessage() . "\n";
+                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_FAILED);
             }
         }
 
-        echo "\n[{$datetime}] Checking for pending import tasks: ";
+        echo date("Y-m-d H:i:s") . " - INFO - Worker cycle completed.\n";
+    }
 
-        $tasks = $this->getDi()['centreon.db-manager']->getRepository(TaskRepository::class)->findImportTasks();
+    /**
+     * Execute import tasks which are store in task table
+     *
+     * @return void
+     */
+    private function processImportTasks(): void
+    {
+        $tasks = $this->getDi()[\Centreon\ServiceProvider::CENTREON_DB_MANAGER]
+            ->getRepository(TaskRepository::class)
+            ->findImportTasks() ?? [];
 
-        if (count($tasks) == 0)
-        {
-            echo "None found";
-        } else {
-            foreach ($tasks as $x => $task) {
-                /*
-                * mark task as being worked on
-                */
-                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(),Task::STATE_PROGRESS);
+        echo date("Y-m-d H:i:s") . " - INFO - Checking for pending import tasks: "
+            . count($tasks) . " task(s) found.\n";
 
-                try {
-                    $this->getDi()['centreon_remote.export']->import();
-                } catch (\Exception $e) {
-                    echo $e->__toString()."\n";
-                }
-                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(),Task::STATE_COMPLETED);
-                
-                echo ($x ? ', ' : '') . "#" . $task->getId() . " (parent ID #" . $task->getParentId() . ")";
+        foreach ($tasks as $x => $task) {
+            echo date("Y-m-d H:i:s") . " - INFO - Processing task #"
+                . $task->getId() . " (parent ID #" . $task->getParentId() . ")...\n";
+
+            /*
+             * mark task as being worked on
+             */
+            $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_PROGRESS);
+
+            try {
+                $this->getDi()['centreon_remote.export']->import();
+
+                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_COMPLETED);
+                echo date("Y-m-d H:i:s") . " - INFO - Task #" . $task->getId() . " completed.\n";
+            } catch (\Exception $e) {
+                echo date("Y-m-d H:i:s") . " - ERROR - Task #" . $task->getId() . " failed.\n";
+                echo date("Y-m-d H:i:s") . " - ERROR - Error message: " . $e->getMessage() . "\n";
+                $this->getDi()['centreon.taskservice']->updateStatus($task->getId(), Task::STATE_FAILED);
             }
-
         }
 
-        echo "\n[{$datetime}] Worker cycle completed.";
+        echo date("Y-m-d H:i:s") . " - INFO - Worker cycle completed.\n";
     }
 
     /**
      * Worker method to create task for import on remote.
+     *
+     * @param int $taskId the task id to create on the remote server
+     * @return void
      */
-    public function createRemoteTask(int $taskId)
+    public function createRemoteTask(int $taskId): void
     {
-        $task = $this->getDi()['centreon.db-manager']->getRepository(TaskRepository::class)->findOneById($taskId);
+        // find task parameters (type, status, params...)
+        $task = $this->getDi()[\Centreon\ServiceProvider::CENTREON_DB_MANAGER]
+            ->getRepository(TaskRepository::class)
+            ->findOneById($taskId);
 
         /**
          * create import task on remote
@@ -119,19 +157,26 @@ class CentreonWorker implements CentreonClapiServiceInterface
         $params = unserialize($task->getParams())['params'];
         $centreonPath = trim($params['centreon_path'], '/');
         $centreonPath = $centreonPath ? $centreonPath : '/centreon';
-        $url = "{$params['remote_ip']}/{$centreonPath}/api/external.php?object=centreon_task_service&action=AddImportTaskWithParent";
+        $url = $params['http_method'] ? $params['http_method'] . "://" : "";
+        $url .= $params['remote_ip'];
+        $url .= $params['http_port'] ? ":" . $params['http_port'] : "";
+        $url .= "/{$centreonPath}/api/external.php?object=centreon_task_service&action=AddImportTaskWithParent";
 
         try {
-            $curl = new Curl;
-            $res = $curl->post($url, ['parent_id' => $task->getId()]);
-
-            if ($curl->error) {
-                printf("Curl error while creating parent task: %s\n", $curl->error_message);
-                printf("url called: %s\n", $url);
-            }
-        } catch (\ErrorException $e) {
-            echo "Curl error while creating parent task\n";
-            echo $e->__toString()."\n";
+            $curl = new \CentreonRestHttp;
+            $res = $curl->call(
+                $url,
+                'POST',
+                ['parent_id' => $task->getId()],
+                null,
+                false,
+                $params['no_check_certificate'],
+                $params['no_proxy']
+            );
+        } catch (\Exception $e) {
+            echo date("Y-m-d H:i:s") . " - ERROR - Error while creating parent task on "
+                . $url . ".\n";
+            echo date("Y-m-d H:i:s") . " - ERROR - Error message: " . $e->getMessage() . "\n";
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2018 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2019 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -35,7 +35,7 @@
 
 
 include "./include/common/autoNumLimit.php";
-require_once dirname(__FILE__) . "/listFunction.php";
+require_once __DIR__ . "/listFunction.php";
 
 $labels = array(
     'name' => _('Name'),
@@ -45,16 +45,17 @@ $labels = array(
     'disabled' => _('Disabled')
 );
 
+$searchLdap = filter_var(
+    $_POST['searchLdap'] ?? $_GET['searchLdap'] ?? null,
+    FILTER_SANITIZE_STRING
+);
+
 $ldapConf = new CentreonLdapAdmin($pearDB);
-$searchLdap = null;
-if (isset($_POST['searchLdap'])) {
-    $searchLdap = $_POST['searchLdap'];
-    $centreon->historySearch[$url] = $searchLdap;
-} elseif (isset($_GET['searchLdap'])) {
-    $searchLdap = $_GET['searchLdap'];
-    $centreon->historySearch[$url] = $searchLdap;
-} elseif (isset($centreon->historySearch[$url])) {
-    $searchLdap = $centreon->historySearch[$url];
+if (isset($_POST['searchLdap']) || isset($_GET['searchLdap'])) {
+    $centreon->historySearch = array();
+    $centreon->historySearch[$url]['searchLdap'] = $searchLdap;
+} else {
+    $searchLdap = $centreon->historySearch[$url]['searchLdap'] ?? null;
 }
 
 $list = $ldapConf->getLdapConfigurationList($searchLdap);
@@ -66,13 +67,19 @@ foreach ($list as $k => $v) {
         $enableLdap = 1;
     }
 }
-$pearDB->query("UPDATE options SET `value` = $enableLdap WHERE `key` = 'ldap_auth_enable'");
+$pearDB->query("UPDATE options SET `value` = " . $enableLdap . " WHERE `key` = 'ldap_auth_enable'");
 
 include "./include/common/checkPagination.php";
 $list = $ldapConf->getLdapConfigurationList($searchLdap, ($num * $limit), $limit);
 $tpl = initSmartyTpl($path . 'ldap/', $tpl);
 
 $form = new HTML_QuickFormCustom('select_form', 'POST', "?o=ldap&p=" . $p);
+
+$attrBtnSuccess = array(
+    "class" => "btc bt_success",
+    "onClick" => "window.history.replaceState('', '', '?p=" . $p . "');"
+);
+$form->addElement('submit', 'Search', _("Search"), $attrBtnSuccess);
 
 $tpl->assign('list', $list);
 $tpl->assign(

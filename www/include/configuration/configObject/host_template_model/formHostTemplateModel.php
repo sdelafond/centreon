@@ -279,18 +279,13 @@ $cloneSetTemplate = array();
 $cloneSetTemplate[] = $form->addElement(
     'select',
     'tpSelect[#index#]',
-    _("Template"),
-    (array(null => null) + $hostObj->getList(false, true)),
+    '',
+    (array(null => null) + $hostObj->getList(false, true, $host_id)),
     array(
         "id" => "tpSelect_#index#",
+        "class" => "select2",
         "type" => "select-one"
     )
-);
-$cloneSetMacro[] = $form->addElement(
-    'hidden',
-    'macroFrom[#index#]',
-    'direct',
-    array('id' => 'macroFrom_#index#')
 );
 
 /*
@@ -390,6 +385,9 @@ if ($o != "mc") {
 /*
  * Additive
  */
+$dbResult = $pearDB->query('SELECT `value` FROM options WHERE `key` = "inheritance_mode"');
+$inheritanceMode = $dbResult->fetch();
+
 if ($o == "mc") {
     $contactAdditive[] = $form->createElement('radio', 'mc_contact_additive_inheritance', null, _("Yes"), '1');
     $contactAdditive[] = $form->createElement('radio', 'mc_contact_additive_inheritance', null, _("No"), '0');
@@ -930,7 +928,7 @@ if ($valid) {
     $form->accept($renderer);
     $tpl->assign('form', $renderer->toArray());
     $tpl->assign('o', $o);
-
+    $tpl->assign('inheritance', $inheritanceMode['value']);
     $tpl->assign('custom_macro_label', _('Custom macros'));
     $tpl->assign('template_inheritance', _('Template inheritance'));
     $tpl->assign('command_inheritance', _('Command inheritance'));
@@ -943,6 +941,7 @@ if ($valid) {
     $tpl->assign("History_Options", _("History Options"));
     $tpl->assign("Event_Handler", _("Event Handler"));
     $tpl->assign("add_mtp_label", _("Add a template"));
+    $tpl->assign('select_template', _('Select a template'));
     $tpl->assign("seconds", _("seconds"));
     $tpl->assign("tpl", 1);
     $tpl->display("formHost.ihtml");

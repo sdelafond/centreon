@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2015 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2019 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -164,14 +164,12 @@ if (!$is_admin && !$haveAccess) {
         }
         $DBRESULT->closeCursor();
 
-        /* Get notifications contacts */
-        $retrievedNotificationsInfos = get_notified_infos_for_host($host_id);
+        // Get notifications contacts
+        $retrievedNotificationsInfos = getNotifiedInfosForHost($host_id, $dependencyInjector);
         $contacts = $retrievedNotificationsInfos['contacts'];
         $contactGroups = $retrievedNotificationsInfos['contactGroups'];
 
-        /*
-         * Get services informations on the current Host
-         */
+        //Get services informations on the current Host
         $rq = "SELECT DISTINCT s.state AS current_state," .
             " s.output as plugin_output," .
             " s.check_attempt as current_attempt," .
@@ -211,7 +209,10 @@ if (!$is_admin && !$haveAccess) {
             $row['line_class'] = $class;
 
             /* Split the plugin_output */
-            $outputLines = explode("\n", $row['plugin_output']);
+            $outputLines = explode(
+                "\n",
+                htmlentities($row['plugin_output'], ENT_QUOTES, 'UTF-8')
+            );
             $row['short_output'] = $outputLines[0];
             $row["hnl"] = CentreonUtils::escapeSecure(urlencode($row["host_name"]));
             $row["sdl"] = CentreonUtils::escapeSecure(urlencode($row["service_description"]));
@@ -317,7 +318,7 @@ if (!$is_admin && !$haveAccess) {
             ENT_QUOTES,
             "UTF-8"
         );
-        $host_status[$host_name]["current_state"] = $tab_host_status[$data["current_state"]];
+        $host_status[$host_name]["current_state"] = $tab_host_status[$data["current_state"]] ?? '';
         if (isset($host_status[$host_name]["notes_url"]) && $host_status[$host_name]["notes_url"]) {
             $host_status[$host_name]["notes_url"] = str_replace("\$HOSTNAME\$", $data["host_name"], $data["notes_url"]);
             $host_status[$host_name]["notes_url"] = str_replace(
@@ -352,7 +353,7 @@ if (!$is_admin && !$haveAccess) {
          * Get comments for hosts
          */
         $tabCommentHosts = array();
-        $rq2 = " SELECT FROM_UNIXTIME(cmt.entry_time) as comment_time, cmt.comment_id, cmt.author AS author_name,
+        $rq2 = " SELECT cmt.entry_time as comment_time, cmt.comment_id, cmt.author AS author_name,
          cmt.data AS comment_data, cmt.persistent AS is_persistent, h.name AS host_name " .
             " FROM comments cmt, hosts h " .
             " WHERE cmt.host_id = '" . $host_id . "' 
@@ -397,7 +398,7 @@ if (!$is_admin && !$haveAccess) {
         }
 
         $host_status[$host_name]["status_class"] =
-            $tab_color_host[strtolower($host_status[$host_name]["current_state"])];
+            $tab_color_host[strtolower($host_status[$host_name]["current_state"])] ?? '';
 
         if (!$host_status[$host_name]["next_check"]) {
             $host_status[$host_name]["next_check"] = "";
@@ -634,7 +635,7 @@ if (!$is_admin && !$haveAccess) {
         $notesurl = str_replace("\$HOSTSTATE\$", $host_status[$host_name]["current_state"], $notesurl);
         $notesurl = str_replace(
             "\$HOSTSTATEID\$",
-            $tab_host_statusid[$host_status[$host_name]["current_state"]],
+            $tab_host_statusid[$host_status[$host_name]["current_state"]] ?? '',
             $notesurl
         );
 
@@ -651,7 +652,7 @@ if (!$is_admin && !$haveAccess) {
         $actionurl = str_replace("\$HOSTSTATE\$", $host_status[$host_name]["current_state"], $actionurl);
         $actionurl = str_replace(
             "\$HOSTSTATEID\$",
-            $tab_host_statusid[$host_status[$host_name]["current_state"]],
+            $tab_host_statusid[$host_status[$host_name]["current_state"]] ?? '',
             $actionurl
         );
         $tpl->assign("h_ext_action_url", CentreonUtils::escapeSecure($actionurl));
@@ -693,6 +694,19 @@ if (!$is_admin && !$haveAccess) {
         if (count($tools) > 0) {
             $tpl->assign("tools", $tools);
         }
+
+        // Check if central or remote server
+        $DBRESULT = $pearDB->query("SELECT `value` FROM `informations` WHERE `key` = 'isRemote'");
+        $result = $DBRESULT->fetchRow();
+        if ($result === false) {
+            $isRemote = false;
+        } else {
+            $isRemote = array_map("myDecode", $result);
+            $isRemote = ($isRemote['value'] === 'yes') ? true : false;
+        }
+        $DBRESULT->closeCursor();
+        $tpl->assign("isRemote", $isRemote);
+
 
         $tpl->display("hostDetails.ihtml");
     } else {

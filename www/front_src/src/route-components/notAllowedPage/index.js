@@ -1,11 +1,12 @@
-import React from "react";
+/* eslint-disable react/jsx-filename-extension */
 
-const notAllowedPage = () => {
-  return (
-    <div class="message-alert">
-      You are not allowed to see this page
-    </div>
-  );
-};
+import React from 'react';
+import styles from '../../styles/partials/_messages.scss';
 
-export default notAllowedPage;
+const NotAllowedPage = () => (
+  <div className={styles['message-alert']}>
+    You are not allowed to see this page
+  </div>
+);
+
+export default NotAllowedPage;

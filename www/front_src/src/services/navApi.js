@@ -1,14 +1,16 @@
-import axios from "axios";
+/* eslint-disable import/prefer-default-export */
 
-const navUrl = "/_CENTREON_PATH_PLACEHOLDER_/api/internal.php?object=centreon_menu&action=menu";
+import axios from 'axios';
+
+const navUrl = './api/internal.php?object=centreon_menu&action=menu';
 
 export function getNavItems(callback) {
   axios
     .get(navUrl)
-    .then(res => {
+    .then((res) => {
       callback(res);
     })
-    .catch(err => {
+    .catch((err) => {
       throw err;
     });
 }

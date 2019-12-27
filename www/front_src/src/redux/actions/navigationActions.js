@@ -1,24 +1,41 @@
-export const SET_NAVIGATION_DATA = "SET_NAVIGATION_DATA";
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-restricted-syntax */
+import axios from '../../axios';
 
-export const setNavigation = data => {
+export const FETCH_NAVIGATION_BEGIN = 'FETCH_NAVIGATION_BEGIN';
+export const FETCH_NAVIGATION_SUCCESS = 'FETCH_NAVIGATION_SUCCESS';
+export const FETCH_NAVIGATION_FAILURE = 'FETCH_NAVIGATION_FAILURE';
 
-  // store allowed topologies in an array
-  // eg : ["3","301","30102","6","602"]
-  let navigationData = []
-  for (let [levelOneKey, levelOneProps] of Object.entries(data)) {
-    navigationData.push(levelOneKey.slice(1))
-    for (let [levelTwoKey, levelTwoProps] of Object.entries(levelOneProps.children)) {
-      navigationData.push(levelTwoKey.slice(1))
-      for (let levelThreeProps of Object.values(levelTwoProps.children)) {
-        for (let levelFourKey of Object.keys(levelThreeProps)) {
-          navigationData.push(levelFourKey.slice(1))
-        }
-      }
+export const fetchNavigationData = () => {
+  return async (dispatch) => {
+    // Initiate loading state
+    dispatch(fetchNavigationBegin());
+
+    try {
+      // Call the API
+      const { data } = await axios(
+        'internal.php?object=centreon_topology&action=navigationList',
+      ).get();
+
+      // Update payload in reducer on success
+      dispatch(fetchNavigationSuccess(data.result));
+    } catch (err) {
+      // Update error in reducer on failure
+      dispatch(fetchNavigationFailure(err));
     }
-  }
-
-  return {
-    type: SET_NAVIGATION_DATA,
-    navigationData
-  }
+  };
 };
+
+const fetchNavigationBegin = () => ({
+  type: FETCH_NAVIGATION_BEGIN,
+});
+
+const fetchNavigationSuccess = (items) => ({
+  type: FETCH_NAVIGATION_SUCCESS,
+  items
+});
+
+const fetchNavigationFailure = (error) => ({
+  type: FETCH_NAVIGATION_FAILURE,
+  error,
+});

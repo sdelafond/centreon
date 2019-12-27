@@ -1,19 +1,27 @@
-import React, { Component } from "react";
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/default-props-match-prop-types */
+/* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/prop-types */
 
-import PropTypes from "prop-types";
-import fieldHoc from "./hoc";
-import { prepareInputProps } from "./utils";
-import Icon from "../icon";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
+import styles from '../../styles/partials/form/_form.scss';
+import fieldHoc from './hoc';
+import { prepareInputProps } from './utils';
 
 class PasswordInputField extends Component {
   state = {
-    shown: false
+    shown: false,
   };
 
   toggleShowPassword = () => {
     const { shown } = this.state;
     this.setState({
-      shown: !shown
+      shown: !shown,
     });
   };
 
@@ -33,43 +41,43 @@ class PasswordInputField extends Component {
     const { shown } = this.state;
 
     return (
-      <div class={"form-group" + (error ? " has-danger" : "")}>
+      <div
+        className={classnames(styles['form-group'], {
+          [styles['has-danger']]: !!error,
+        })}
+      >
         <label>
           <span>{label}</span>
-          <span class="label-option required">
-            {topRightLabel ? topRightLabel : null}
+          <span className={classnames(styles['label-option'], styles.required)}>
+            {topRightLabel || null}
           </span>
         </label>
-        <div class="input-group">
+        <div className={styles['input-group']}>
           <input
-            type={shown ? "text" : "password"}
+            type={shown ? 'text' : 'password'}
             placeholder={placeholder}
-            class={"form-control password" + (error ? " is-invalid" : "")}
+            className={classnames(styles['form-control'], styles.password, {
+              [styles['is-invalid']]: !!error,
+            })}
             {...prepareInputProps(rest)}
           />
-          <span class="input-group-text" onClick={this.toggleShowPassword}>
-            <Icon face={shown ? "eye" : "eye-slash"} />
-          </span>
         </div>
         {error ? (
-          <div class="invalid-feedback">
-            <Icon face="exclamation-triangle" />
-            {error}{" "}
-          </div>
+          <div className={styles['invalid-feedback']}>{error}</div>
         ) : null}
       </div>
     );
   }
 }
 
-PasswordInputField.displayName = "PasswordInputField";
+PasswordInputField.displayName = 'PasswordInputField';
 PasswordInputField.defaultProps = {
-  className: "form-control",
+  className: styles['form-control'],
   modifiers: [],
-  renderMeta: null
+  renderMeta: null,
 };
 PasswordInputField.propTypes = {
-  error: PropTypes.element
+  error: PropTypes.element,
 };
 
 export { PasswordInputField };

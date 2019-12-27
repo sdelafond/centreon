@@ -1,126 +1,155 @@
-import React, {Component} from "react";
-import config from "./config";
-import Header from "./components/header";
-import {Switch} from "react-router-dom";
-import {ConnectedRouter} from "react-router-redux";
-import {history} from "./store";
-import ClassicRoute from "./components/router/classicRoute";
-import ReactRoute from './components/router/reactRoute';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/sort-comp */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-filename-extension */
 
-import {classicRoutes, reactRoutes} from "./route-maps";
-import NavigationComponent from "./components/navigation";
-import Footer from "./components/footer";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import Fullscreen from 'react-fullscreen-crossbrowser';
 import queryString from 'query-string';
+import { batchActions } from 'redux-batched-actions';
+import { StylesProvider } from '@material-ui/styles';
+import Header from './components/header';
+import { history } from './store';
+
+import NavigationComponent from './components/navigation';
+import Tooltip from './components/tooltip';
+import Footer from './components/footer';
+import MainRouter from './components/mainRouter';
 import axios from './axios';
-import NotAllowedPage from './route-components/notAllowedPage';
+
+import { fetchExternalComponents } from './redux/actions/externalComponentsActions';
+
+import styles from './App.scss';
+import footerStyles from './components/footer/footer.scss';
+import contentStyles from './styles/partials/_content.scss';
 
 class App extends Component {
-
   state = {
     isFullscreenEnabled: false,
-    acls: [],
-    aclsLoaded: false,
-  }
+  };
 
-  keepAliveTimeout = null
+  keepAliveTimeout = null;
 
   // check in arguments if min=1
   getMinArgument = () => {
-    const { search } = history.location
-    const parsedArguments = queryString.parse(search)
+    const { search } = history.location;
+    const parsedArguments = queryString.parse(search);
 
-    return (parsedArguments.min === "1")
-  }
+    return parsedArguments.min === '1';
+  };
 
+  // enable fullscreen
   goFull = () => {
-    this.setState({ isFullscreenEnabled: true });
-  }
+    // set fullscreen url parameters
+    // this will be used to init iframe src
+    window.fullscreenSearch = window.location.search;
+    window.fullscreenHash = window.location.hash;
 
-  // get allowed routes
-  getAcl = () => {
-    axios("internal.php?object=centreon_acl_webservice&action=getCurrentAcl")
-      .get()
-      .then(({data}) => this.setState({acls: data, aclsLoaded: true}))
-  }
+    // enable fullscreen after 200ms
+    setTimeout(() => {
+      this.setState({ isFullscreenEnabled: true });
+    }, 200);
+  };
+
+  // disable fullscreen
+  removeFullscreenParams = () => {
+    if (history.location.pathname === '/main.php') {
+      history.push({
+        pathname: '/main.php',
+        search: window.fullscreenSearch,
+        hash: window.fullscreenHash,
+      });
+    }
+
+    // remove fullscreen parameters to keep normal routing
+    delete window.fullscreenSearch;
+    delete window.fullscreenHash;
+  };
 
   // keep alive (redirect to login page if session is expired)
   keepAlive = () => {
     this.keepAliveTimeout = setTimeout(() => {
-      axios("internal.php?object=centreon_keepalive&action=keepAlive")
+      axios('internal.php?object=centreon_keepalive&action=keepAlive')
         .get()
         .then(() => this.keepAlive())
-        .catch(error => {
-          if (error.response.status == 401) {
+        .catch((error) => {
+          if (error.response.status === 401) {
             // redirect to login page
-            window.location.href = config.urlBase + 'index.php?disconnect=1'
+            window.location.href = 'index.php?disconnect=1';
+          } else {
+            // keepalive must be done cause it may failed due to temporary unavailability
+            this.keepAlive();
           }
-        })
-    }, 15000)
-  }
+        });
+    }, 15000);
+  };
 
-  UNSAFE_componentWillMount = () => {
-    this.getAcl();
+  componentDidMount() {
+    const { fetchExternalComponents } = this.props;
+
+    // 2 - fetch external components (pages, hooks...)
+    fetchExternalComponents();
+
     this.keepAlive();
   }
 
-  linkReactRoutesAndComponents = () => {
-    const {acls} = this.state;
-    return reactRoutes.map(({ path, comp, ...rest }) => (
-      <ReactRoute
-        history={history}
-        path={path}
-        component={acls.includes(`/${path.split('/_CENTREON_PATH_PLACEHOLDER_/')[1]}`) ? comp : NotAllowedPage}
-        {...rest}
-      />
-    ))
-  }
-
   render() {
-    const {aclsLoaded} = this.state;
     const min = this.getMinArgument();
 
-    let reactRouter = '';
-
-    if (aclsLoaded) {
-      reactRouter = this.linkReactRoutesAndComponents();
-    }
-
     return (
-      <ConnectedRouter history={history}>
-        <div class="wrapper">
-          {!min && // do not display menu if min=1
-            <NavigationComponent/>
-          }
-          <div id="content">
-            {!min && // do not display header if min=1
-              <Header/>
+      <StylesProvider injectFirst>
+        <ConnectedRouter history={history}>
+          <div className={styles.wrapper}>
+            {!min && <NavigationComponent /> // do not display menu if min=1
             }
-            <div id="fullscreen-wrapper">
-              <Fullscreen
-                enabled={this.state.isFullscreenEnabled}
-                onChange={isFullscreenEnabled => this.setState({isFullscreenEnabled})}>
-                <div className="full-screenable-node">
-                  <div className="main-content">
-                    <Switch>
-                      {classicRoutes.map(({path, comp, ...rest}, i) => (
-                        <ClassicRoute key={i} history={history} path={path} component={comp} {...rest} />
-                      ))}
-                      {aclsLoaded && reactRouter}
-                    </Switch>
+            <Tooltip />
+            <div id="content" className={contentStyles.content}>
+              {!min && <Header /> // do not display header if min=1
+              }
+              <div
+                id="fullscreen-wrapper"
+                className={contentStyles['fullscreen-wrapper']}
+              >
+                <Fullscreen
+                  enabled={this.state.isFullscreenEnabled}
+                  onClose={this.removeFullscreenParams}
+                  onChange={(isFullscreenEnabled) =>
+                    this.setState({ isFullscreenEnabled })
+                  }
+                >
+                  <div className={styles['main-content']}>
+                    <MainRouter />
                   </div>
-                </div>
-              </Fullscreen>
+                </Fullscreen>
+              </div>
+              {!min && <Footer /> // do not display footer if min=1
+              }
             </div>
-            {!min && // do not display footer if min=1
-              <Footer/>
-            }
+            <span
+              className={footerStyles['full-screen']}
+              onClick={this.goFull}
+            />
           </div>
-          <span className="full-screen" onClick={this.goFull}></span>
-        </div>
-      </ConnectedRouter>
+        </ConnectedRouter>
+      </StylesProvider>
     );
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchExternalComponents: () => {
+      dispatch(fetchExternalComponents());
+    },
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(App);

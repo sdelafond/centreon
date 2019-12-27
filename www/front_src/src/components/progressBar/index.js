@@ -1,30 +1,38 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { history } from "../../store";
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/prop-types */
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import classnames from 'classnames';
+import { history } from '../../store';
+import styles from './progressbar.scss';
 
 class ProgressBar extends Component {
-  goToPath = path => {
+  goToPath = (path) => {
     history.push(path);
   };
 
   render() {
     const { links } = this.props;
     return (
-      <div class="progress-bar">
-        <div class="progress-bar-wrapper">
-          <ul class="progress-bar-items">
+      <div className={styles['progress-bar']}>
+        <div className={styles['progress-bar-wrapper']}>
+          <ul className={styles['progress-bar-items']}>
             {links
-              ? links.map(link => (
+              ? links.map((link) => (
                   <li
-                    class="progress-bar-item"
+                    className={styles['progress-bar-item']}
                     onClick={this.goToPath.bind(this, link.path)}
                   >
                     <span
-                      class={
-                        "progress-bar-link " +
-                        (link.active ? "active" : "") +
-                        (link.prevActive ? " prev" : "")
-                      }
+                      className={classnames(
+                        styles['progress-bar-link'],
+                        { [styles.active]: link.active },
+                        { [styles.prev]: link.prevActive },
+                      )}
                     >
                       {link.number}
                     </span>
@@ -41,4 +49,7 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProgressBar);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ProgressBar);

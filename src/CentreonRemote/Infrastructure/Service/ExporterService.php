@@ -23,16 +23,47 @@ class ExporterService implements ContainerInterface
 
         $name = strtolower($object::getName());
         $this->objects[$name] = [
+            'name' => $name,
             'classname' => $object,
             'factory' => $factory,
         ];
 
-        $this->_sort();
+        $this->sort();
     }
 
-    private function _sort(): void
+    public function has($id): bool
     {
-        usort($this->objects, function($a, $b) {
+        $result = $this->getKey($id);
+
+        return $result !== null;
+    }
+
+    public function get($id): array
+    {
+        $key = $this->getKey($id);
+        if ($key === null) {
+            throw new NotFoundException('Not found exporter with name: ' . $id);
+        }
+
+        $result = $this->objects[$key];
+
+        return $result;
+    }
+
+    private function getKey($id): ?int
+    {
+        foreach ($this->objects as $key => $object) {
+            if ($object['name'] === $id) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    private function sort(): void
+    {
+        usort($this->objects, function ($a, $b) {
             return $a['classname']::order() - $b['classname']::order();
         });
     }
