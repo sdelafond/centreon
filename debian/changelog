@@ -1,3 +1,16 @@
+centreon-web (19.10.4-1~1.gbpe1785f) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @e1785fd5700808dbbe598096c23e826228086fe0 **
+
+  [ Sébastien Delafond ]
+  * Remove dependency on php-quickform
+  * Add debian/watch
+  * Update homepage in debian/control
+  * New upstream version 19.10.4
+  * Rediff patches
+
+ -- Sebastien Delafond <seb@debian.org>  Fri, 27 Dec 2019 13:14:23 +0100
+
 centreon-web (18.10.0-2) unstable; urgency=medium
 
   * Start working on dynamically gathering PHP and NPM dependencies during the build
