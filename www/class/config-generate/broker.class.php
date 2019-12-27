@@ -69,7 +69,8 @@ class Broker extends AbstractObjectXML
         id,
         name,
         centreonbroker_module_path,
-        centreonbroker_cfg_path
+        centreonbroker_cfg_path,
+        centreonbroker_logs_path
     ';
     protected $exclude_parameters = array(
         'blockId'
@@ -88,9 +89,9 @@ class Broker extends AbstractObjectXML
         global $pearDB;
 
         if (!is_null($this->cacheExternalValue)) {
-            return ;
+            return;
         }
-        
+
         $this->cacheExternalValue = array();
         $stmt = $this->backend_instance->db->prepare("SELECT 
             CONCAT(cf.fieldname, '_', cttr.cb_tag_id, '_', ctfr.cb_type_id) as name, external FROM cb_field cf, cb_type_field_relation ctfr, cb_tag_type_relation cttr
@@ -107,7 +108,7 @@ class Broker extends AbstractObjectXML
     private function generate($poller_id, $localhost)
     {
         $this->getExternalValues();
-        
+
         if (is_null($this->stmt_broker)) {
             $this->stmt_broker = $this->backend_instance->db->prepare("SELECT 
               $this->attributes_select
@@ -143,7 +144,7 @@ class Broker extends AbstractObjectXML
             $stats_activate = $row['stats_activate'];
             $correlation_activate = $row['correlation_activate'];
 
-            # Base parameters
+            // Base parameters
             $object['broker_id'] = $row['config_id'];
             $object['broker_name'] = $row['config_name'];
             $object['poller_id'] = $this->engine['id'];
@@ -170,17 +171,20 @@ class Broker extends AbstractObjectXML
             $this->stmt_broker_parameters->execute();
             $resultParameters = $this->stmt_broker_parameters->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
 
-            # Flow parameters
+            // Flow parameters
             foreach ($resultParameters as $key => $value) {
                 // We search the BlockId
                 $blockId = 0;
+                $configGroupdId = null;
                 for ($i = count($value); $i > 0; $i--) {
                     if (isset($value[$i]['config_key']) && $value[$i]['config_key'] == 'blockId') {
                         $blockId = $value[$i]['config_value'];
+                        $configGroupId = $value[$i]['config_group_id'];
                         break;
                     }
                 }
 
+                $rrdCacheOption = 'disable';
                 foreach ($value as $subvalue) {
                     if (!isset($subvalue['fieldIndex']) ||
                         $subvalue['fieldIndex'] == "" ||
@@ -199,9 +203,22 @@ class Broker extends AbstractObjectXML
                             $object[$subvalue['config_group_id']][$key]['filters'][][$subvalue['config_key']] =
                                 $subvalue['config_value'];
                         } else {
+                            if ($subvalue['config_key'] === 'rrd_cached_option') {
+                                $rrdCacheOption = $subvalue['config_value'];
+                                continue;
+                            }
+
+                            if ($subvalue['config_key'] === 'rrd_cached') {
+                                if ($rrdCacheOption === 'tcp') {
+                                    $object[$subvalue['config_group_id']][$key]['port'] = $subvalue['config_value'];
+                                } elseif ($rrdCacheOption === 'unix') {
+                                    $object[$subvalue['config_group_id']][$key]['path'] = $subvalue['config_value'];
+                                }
+                                continue;
+                            }
+
                             $object[$subvalue['config_group_id']][$key][$subvalue['config_key']] =
                                 $subvalue['config_value'];
-                            
                             // We override with external values
                             if (isset($this->cacheExternalValue[$subvalue['config_key'] . '_' . $blockId])) {
                                 $object[$subvalue['config_group_id']][$key][$subvalue['config_key']] =
@@ -220,9 +237,19 @@ class Broker extends AbstractObjectXML
                     }
                     $flow_count++;
                 }
+
+                // Check if we need to add values from external
+                foreach ($this->cacheExternalValue as $key2 => $value2) {
+                    if (preg_match('/^(.+)_' . $blockId . '$/', $key2, $matches)) {
+                        if (!isset($object[$configGroupId][$key][$matches[1]])) {
+                            $object[$configGroupId][$key][$matches[1]] =
+                                $this->getInfoDb($value2);
+                        }
+                    }
+                }
             }
 
-            # Stats parameters
+            // Stats parameters
             if ($stats_activate == '1') {
                 $object[$flow_count]['stats'] = array(
                     'type' => 'stats',
@@ -231,13 +258,19 @@ class Broker extends AbstractObjectXML
                 );
             }
 
-            # Generate file
+            // Generate file
             $this->generateFile($object, true, 'centreonBroker');
             $this->writeFile($this->backend_instance->getPath());
         }
+
+        // Manage path of cbd watchdog log
+        $watchdogLogsPath = trim($this->engine['broker_logs_path']) === '' ?
+            '/var/log/centreon-broker/watchdog.log' :
+            trim($this->engine['broker_logs_path']) . '/watchdog.log';
         $watchdog[] = array(
-            'log' => '/var/log/centreon-broker/watchdog.log'
+            'log' => $watchdogLogsPath
         );
+
         $this->generate_filename = 'watchdog.xml';
         $this->generateFile($watchdog, true, 'centreonbroker');
         $this->writeFile($this->backend_instance->getPath());
@@ -260,6 +293,7 @@ class Broker extends AbstractObjectXML
             $this->engine['name'] = $row['name'];
             $this->engine['broker_modules_path'] = $row['centreonbroker_module_path'];
             $this->engine['broker_cfg_path'] = $row['centreonbroker_cfg_path'];
+            $this->engine['broker_logs_path'] = $row['centreonbroker_logs_path'];
         } catch (Exception $e) {
             throw new Exception('Exception received : ' . $e->getMessage() . "\n");
         }
@@ -269,7 +303,7 @@ class Broker extends AbstractObjectXML
     {
         $this->generate($poller['id'], $poller['localhost']);
     }
-    
+
     private function getInfoDb($string)
     {
         /*
@@ -332,10 +366,10 @@ class Broker extends AbstractObjectXML
                 $db = $this->backend_instance->db_cs;
                 break;
         }
-        
+
         $stmt = $db->prepare($query);
         $stmt->execute();
-        
+
         $infos = array();
         while (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
             $val = $row[$s_column];
@@ -351,7 +385,7 @@ class Broker extends AbstractObjectXML
         }
         return $infos;
     }
-    
+
     private function rpnCalc($rpn, $val)
     {
         if (!is_numeric($val)) {
@@ -367,7 +401,7 @@ class Broker extends AbstractObjectXML
             return $val;
         }
     }
-    
+
     private function rpnOperation($result, $item)
     {
         if (in_array($item, array('+', '-', '*', '/'))) {

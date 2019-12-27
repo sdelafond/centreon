@@ -1,4 +1,9 @@
-import React from "react";
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/prop-types */
+
+import React from 'react';
+import classnames from 'classnames';
+import styles from '../../styles/partials/form/_form.scss';
 
 const FieldMsg = ({
   className,
@@ -8,7 +13,9 @@ const FieldMsg = ({
   ...restProps
 }) => (
   <FieldMsgTagName
-    className={`field__msg ${className} ${isError ? "field__msg--error" : ""}`}
+    className={classnames(styles.field__msg, styles[className], {
+      [styles['field__msg--error']]: !!isError,
+    })}
     {...restProps}
   >
     {children}
@@ -16,9 +23,9 @@ const FieldMsg = ({
 );
 
 FieldMsg.defaultProps = {
-  className: "",
+  className: '',
   isError: true,
-  tagName: "div"
+  tagName: 'div',
 };
 
 export default FieldMsg;

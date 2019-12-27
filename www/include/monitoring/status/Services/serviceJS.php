@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2010 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2019 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -235,6 +235,9 @@ if (isset($_GET["acknowledge"])) {
     }
 
     function goM(_time_reload, _sid, _o) {
+        if (_on == 0) {
+            return;
+        }
         _lock = 1;
         var proc = new Transformation();
 
@@ -264,6 +267,9 @@ if (isset($_GET["acknowledge"])) {
         }
 
         _lock = 0;
+        if (_timeoutID) { // Kill next execution if in queue
+            clearTimeout(_timeoutID);
+        }
         _timeoutID = cycleVisibilityChange(function(){goM(_time_reload, _sid, _o)}, _time_reload);
         _time_live = _time_reload;
         _on = 1;

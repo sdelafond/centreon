@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2015 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2019 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -40,6 +40,7 @@ if (!isset($centreon)) {
 include("./include/common/autoNumLimit.php");
 
 $SearchTool = null;
+$queryValues = array();
 $search = null;
 
 if (isset($_POST['searchGT'])) {
@@ -63,6 +64,7 @@ $stmt = $pearDB->prepare($rq);
 foreach ($queryValues as $key => $value) {
     $stmt->bindValue(':' . $key, $value, \PDO::PARAM_STR);
 }
+
 $stmt->execute();
 
 $rows = $pearDB->query("SELECT FOUND_ROWS()")->fetchColumn();
@@ -86,13 +88,16 @@ $tpl->assign("headerMenu_options", _("Options"));
 
 #List
 $form = new HTML_QuickFormCustom('select_form', 'POST', "?p=" . $p);
-/*
- * Different style between each lines
- */
+//Different style between each lines
 $style = "one";
-/*
- * Fill a tab with a mutlidimensionnal Array we put in $tpl
- */
+
+$attrBtnSuccess = array(
+    "class" => "btc bt_success",
+    "onClick" => "window.history.replaceState('', '', '?p=" . $p . "');"
+);
+$form->addElement('submit', 'Search', _("Search"), $attrBtnSuccess);
+
+//Fill a tab with a mutlidimensionnal Array we put in $tpl
 $elemArr = array();
 for ($i = 0; $graph = $stmt->fetch(); $i++) {
     $selectedElements = $form->addElement('checkbox', "select[" . $graph['graph_id'] . "]");

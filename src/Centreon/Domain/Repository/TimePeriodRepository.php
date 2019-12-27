@@ -9,7 +9,7 @@ class TimePeriodRepository extends ServiceEntityRepository
 
     /**
      * Export
-     * 
+     *
      * @param int[] $timeperiodList
      * @return array
      */
@@ -54,7 +54,7 @@ SQL;
 
     /**
      * Get a chain of the related objects
-     * 
+     *
      * @param int[] $pollerIds
      * @param int[] $hostTemplateChain
      * @param int[] $serviceTemplateChain
@@ -156,6 +156,36 @@ SQL;
             
             if (!$isExisting) {
                 $this->getChainByParant($row['id'], $result);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get an array of all time periods IDs that are related as templates
+     *
+     * @param int $id ID of time period
+     * @param array $result This parameter is used forward to data from the recursive method
+     * @return array
+     */
+    public function getIncludeChainByParent($id, &$result)
+    {
+        $sql = 'SELECT t.timeperiod_include_id AS `id` '
+            . 'FROM timeperiod_include_relations  AS t '
+            . 'WHERE t.timeperiod_include_id IS NOT NULL AND t.timeperiod_id = :id '
+            . 'GROUP BY t.timeperiod_include_id';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch()) {
+            $isExisting = array_key_exists($row['id'], $result);
+            $result[$row['id']] = $row['id'];
+
+            if (!$isExisting) {
+                $this->getIncludeChainByParent($row['id'], $result);
             }
         }
 

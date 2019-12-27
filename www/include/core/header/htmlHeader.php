@@ -1,7 +1,7 @@
 <?php
 /*
- * Copyright 2005-2016 Centreon
- * Centreon is developped by : Julien Mathis and Romain Le Merlus under
+ * Copyright 2005-2019 Centreon
+ * Centreon is developed by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -37,23 +37,30 @@ if (!isset($centreon)) {
     exit();
 }
 
+// generate version URI parameter to clean css cache at each new version
+$versionParam = isset($centreon->informations) && isset($centreon->informations['version'])
+    ? '?version=' . $centreon->informations['version']
+    : '';
+
 print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 
 ?>
 
 <!DOCTYPE html>
 <html lang="<?php echo $centreon->user->lang; ?>">
-<head>
     <title>Centreon - IT & Network Monitoring</title>
     <link rel="shortcut icon" href="./img/favicon.ico"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="Generator" content="Centreon - Copyright (C) 2005 - 2017 Open Source Matters. All rights reserved."/>
     <meta name="robots" content="index, nofollow"/>
-
+    <?php if (isset($isMobile) && $isMobile) : ?>
+    <link href="./Themes/Centreon-2/MobileMenu/css/material_icons.css" rel="stylesheet" type="text/css"/>
+    <link href="./Themes/Centreon-2/MobileMenu/css/menu.css" rel="stylesheet" type="text/css"/>
+    <?php endif; ?>
     <link href="./include/common/javascript/jquery/plugins/jpaginator/jPaginator.css" rel="stylesheet" type="text/css"/>
-    <link href="./Themes/Centreon-2/style.css" rel="stylesheet" type="text/css"/>
-    <link href="./Themes/Centreon-2/centreon-loading.css" rel="stylesheet" type="text/css"/>
-    <link href="./Themes/Centreon-2/responsive-style.css" rel="stylesheet" type="text/css"/>
+    <link href="./Themes/Centreon-2/style.css<?php echo $versionParam; ?>" rel="stylesheet" type="text/css"/>
+    <link href="./Themes/Centreon-2/centreon-loading.css<?php echo $versionParam; ?>" rel="stylesheet" type="text/css"/>
+    <link href="./Themes/Centreon-2/responsive-style.css<?php echo $versionParam; ?>" rel="stylesheet" type="text/css"/>
     <link href="./Themes/Centreon-2/<?php echo $colorfile; ?>" rel="stylesheet" type="text/css"/>
     <link href="./include/common/javascript/jquery/plugins/timepicker/jquery.ui.timepicker.css" rel="stylesheet"
           type="text/css" media="screen"/>
@@ -117,6 +124,12 @@ print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
     <script src="./include/views/graphs/javascript/centreon-status-chart.js"></script>
     <script src="./include/common/javascript/moment-with-locales.min.2.21.js"></script>
     <script src="./include/common/javascript/moment-timezone-with-data.min.js"></script>
+    <?php if (isset($isMobile) && $isMobile) : ?>
+    <script type="text/javascript">
+      var text_back = '<?= gettext('Back') ?>'
+    </script>
+    <script src="./Themes/Centreon-2/MobileMenu/js/menu.js"></script>
+    <?php endif; ?>
     <?php
 
     global $search, $search_service;
@@ -126,7 +139,11 @@ print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
         $searchStr .= "search_host=" . htmlentities($_GET["search"], ENT_QUOTES, "UTF-8");
     }
     if (isset($centreon->historySearch[$url]) && !isset($_GET["search"])) {
-        $searchStr .= "search_host=" . $centreon->historySearch[$url];
+        if (!is_array($centreon->historySearch[$url])) {
+            $searchStr .= "search_host=" . $centreon->historySearch[$url];
+        } elseif (isset($centreon->historySearch[$url]['search'])) {
+            $searchStr .= "search_host=" . $centreon->historySearch[$url]['search'];
+        }
     }
 
     $searchStrSVC = "";
@@ -202,7 +219,14 @@ print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
     <script src="./include/common/javascript/xslt.js" type="text/javascript"></script>
 </head>
 <body>
+
 <?php if (!isset($_REQUEST['iframe']) || (isset($_REQUEST['iframe']) && $_REQUEST['iframe'] != 1)) { ?>
     <script type="text/javascript" src="./lib/wz_tooltip/wz_tooltip.js"></script>
 <?php } ?>
 <div style="display:none" id="header"></div>
+
+<?php
+// Showing the mobile menu if it's a mobile browser
+if (isset($isMobile) && $isMobile) {
+    require(_CENTREON_PATH_ . 'www/include/common/mobile_menu.php');
+}

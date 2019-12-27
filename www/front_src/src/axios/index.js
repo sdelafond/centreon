@@ -1,8 +1,9 @@
-import axios from "axios";
-import config from "../config";
+import axios from 'axios';
 
-export default url => {
+export const create = (url) => {
   return axios.create({
-    baseURL: `${config.apiBase}${url}`
+    baseURL: `./api/${url}`,
   });
 };
+
+export default create;

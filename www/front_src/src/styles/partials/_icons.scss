@@ -1,13 +1,17 @@
+
+@import "./variables";
+
 @font-face {
   font-family: 'icomoon';
-  src:  url('./fonts/icomoon.eot');
-  src:  url('./fonts/icomoon.eot') format('embedded-opentype'),
-    url('./fonts/icomoon.ttf') format('truetype'),
-    url('./fonts/icomoon.woff') format('woff'),
-    url('./fonts/icomoon.svg') format('svg');
+  src:  url('../../fonts/icomoon.eot');
+  src:  url('../../fonts/icomoon.eot') format('embedded-opentype'),
+    url('../../fonts/icomoon.ttf') format('truetype'),
+    url('../../fonts/icomoon.woff') format('woff'),
+    url('../../fonts/icomoon.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }
+
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
@@ -103,6 +107,18 @@
 .icon-user:before {
   content: "\e90b";
   color: $white-color;
+}
+
+.icon-copy:before {
+  content: "\e90d";
+  color: rgba(255, 161, 37, 1);
+  font-size: 19px;
+}
+
+.icon-copied:before {
+  content: "\e90c";
+  color: rgba(255, 161, 37, 1);
+  font-size: 19px;
 }
 
 .iconmoon {

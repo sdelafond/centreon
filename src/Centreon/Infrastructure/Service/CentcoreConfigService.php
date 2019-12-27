@@ -4,11 +4,11 @@ namespace Centreon\Infrastructure\Service;
 class CentcoreConfigService
 {
 
-    CONST CONF_CORE = 'instCentCore.conf';
-    CONST CONF_PLUGINS = 'instCentPlugins.conf';
-    CONST CONF_WEB = 'instCentWeb.conf';
+    const CONF_CORE = 'instCentCore.conf';
+    const CONF_PLUGINS = 'instCentPlugins.conf';
+    const CONF_WEB = 'instCentWeb.conf';
 
-    CONST MACROS_DELIMITER_TEMPLATE = '@%s@';
+    const MACROS_DELIMITER_TEMPLATE = '@%s@';
 
     /**
      * @var array
@@ -17,41 +17,41 @@ class CentcoreConfigService
 
     /**
      * Macros getter
-     * 
+     *
      * @return array
      */
     public function getMacros(): array
     {
         if ($this->macros === null) {
-            $this->_initMacros();
+            $this->initMacros();
         }
 
         return $this->macros;
     }
-    
+
     /**
      * Replace macros with their values
-     * 
+     *
      * @param string $string
      */
     public function replaceMacros(&$string): void
     {
         $macros = $this->getMacros();
-        
+
         foreach ($macros as $key => $val) {
             $key = str_replace("'", "\\'", $key);
             $macro = sprintf(static::MACROS_DELIMITER_TEMPLATE, $key);
-            
+
             $string = str_replace($macro, $val, $string);
         }
     }
 
-    private function _initMacros(): void
+    private function initMacros(): void
     {
         $data = array_merge(
-            $this->_parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_CORE),
-            $this->_parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_PLUGINS),
-            $this->_parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_WEB)
+            $this->parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_CORE),
+            $this->parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_PLUGINS),
+            $this->parseIniFile(_CENTREON_ETC_ . '/' . static::CONF_WEB)
         );
 
         $this->macros = [
@@ -60,6 +60,7 @@ class CentcoreConfigService
             'centreon_dir_www' => "{$data['INSTALL_DIR_CENTREON']}/www/",
             'centreon_dir_rrd' => "{$data['INSTALL_DIR_CENTREON']}/rrd/",
             'centreon_log' => "{$data['CENTREON_LOG']}",
+            'centreon_cachedir' => "{$data['CENTREON_CACHEDIR']}/",
             'centreon_varlib' => "{$data['CENTREON_VARLIB']}",
             'centreon_group' => "{$data['CENTREON_GROUP']}",
             'centreon_user' => "{$data['CENTREON_USER']}",
@@ -70,11 +71,9 @@ class CentcoreConfigService
             'broker_user' => "{$data['BROKER_USER']}",
             'broker_group' => 'centreon-broker',
             'broker_etc' => "{$data['BROKER_ETC']}",
-            'broker_init_script' => "cbd",
             'monitoring_user' => "{$data['MONITORINGENGINE_USER']}",
             'monitoring_group' => "{$data['MONITORINGENGINE_GROUP']}",
             'monitoring_etc' => "{$data['MONITORINGENGINE_ETC']}",
-            'monitoring_init_script' => "centengine",
             'monitoring_binary' => "{$data['MONITORINGENGINE_BINARY']}",
             'monitoring_varlog' => "{$data['MONITORINGENGINE_LOG']}",
             'plugin_dir' => "{$data['PLUGIN_DIR']}",
@@ -114,17 +113,16 @@ class CentcoreConfigService
          * centreon_plugins
          */
     }
-    
-    private function _parseIniFile($filename): array
+
+    private function parseIniFile($filename): array
     {
         $reslt = [];
 
         try {
-            $reslt = parse_ini_file($filename);
+            $result = parse_ini_file($filename);
         } catch (\Exception $ex) {
-            
         }
 
-        return $reslt;
+        return $result;
     }
 }

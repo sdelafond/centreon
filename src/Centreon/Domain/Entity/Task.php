@@ -9,16 +9,17 @@ class Task implements EntityInterface
     /**
      * Task types
      */
-    CONST TYPE_EXPORT = 'export';
-    CONST TYPE_IMPORT = 'import';
-    CONST TYPE_VERIFY = 'verify';
+    const TYPE_EXPORT = 'export';
+    const TYPE_IMPORT = 'import';
+    const TYPE_VERIFY = 'verify';
 
     /**
      * Task states
      */
-    CONST STATE_PENDING = 'pending';
-    CONST STATE_PROGRESS = 'inprogress';
-    CONST STATE_COMPLETED = 'completed';
+    const STATE_PENDING = 'pending';
+    const STATE_PROGRESS = 'inprogress';
+    const STATE_COMPLETED = 'completed';
+    const STATE_FAILED = 'failed';
 
     /**
      * Task type
@@ -189,12 +190,11 @@ class Task implements EntityInterface
     {
         $ref = new ReflectionClass(__CLASS__);
         $constants = $ref->getConstants();
-        $statusConstants = self::array_filter_key($constants, function($key){
-            return strpos($key,'STATE_') === 0;
+        $statusConstants = self::array_filter_key($constants, function ($key) {
+            return strpos($key, 'STATE_') === 0;
         });
         $statuses = [];
-        foreach ($statusConstants as $stKey => $stConstant){
-
+        foreach ($statusConstants as $stKey => $stConstant) {
             $statuses[] = $ref->getConstant($stKey);
         }
         return $statuses;
@@ -209,7 +209,8 @@ class Task implements EntityInterface
     private function array_filter_key($input, $callback)
     {
         if (!is_array($input)) {
-            trigger_error('array_filter_key() expects parameter 1 to be array, ' . gettype($input) . ' given', E_USER_WARNING);
+            trigger_error('array_filter_key() expects parameter 1 to be array, ' . gettype($input) .
+                ' given', E_USER_WARNING);
             return null;
         }
 

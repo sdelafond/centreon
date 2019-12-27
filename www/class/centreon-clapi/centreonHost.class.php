@@ -109,7 +109,8 @@ class CentreonHost extends CentreonObject
         'u' => 'Unreachable',
         'r' => 'Recovery',
         'f' => 'Flapping',
-        's' => 'Downtime Scheduled'
+        's' => 'Downtime Scheduled',
+        'n' => 'None'
     );
 
     protected $templateIds;
@@ -298,7 +299,6 @@ class CentreonHost extends CentreonObject
         }
         $this->params = array_merge($this->params, $addParams);
         $this->checkParameters();
-
     }
 
     /**
@@ -339,6 +339,41 @@ class CentreonHost extends CentreonObject
             "DELETE FROM service WHERE service_register = '1' "
             . "AND service_id NOT IN (SELECT service_service_id FROM host_service_relation)"
         );
+    }
+
+    /**
+     * List instance (poller) for host
+     *
+     * @param string $parameters
+     * @throws CentreonClapiException
+     */
+    public function showinstance($parameters)
+    {
+        $params = explode($this->delim, $parameters);
+        if ($parameters == '') {
+            throw new CentreonClapiException(self::MISSINGPARAMETER);
+        }
+        if (($hostId = $this->getObjectId($params[self::ORDER_UNIQUENAME])) != 0) {
+            $relObj = new \Centreon_Object_Relation_Instance_Host($this->dependencyInjector);
+            $fields = array('id', 'name');
+            $elements = $relObj->getMergedParameters(
+                $fields,
+                array(),
+                -1,
+                0,
+                "host_name",
+                "ASC",
+                array('host_id' => $hostId),
+                'AND'
+            );
+
+            echo 'id' . $this->delim . 'name' . "\n";
+            foreach ($elements as $elem) {
+                echo $elem['id'] . $this->delim . $elem['name'] . "\n";
+            }
+        } else {
+            throw new CentreonClapiException(self::OBJECT_NOT_FOUND . ":" . $params[self::ORDER_UNIQUENAME]);
+        }
     }
 
     /**
@@ -429,6 +464,11 @@ class CentreonHost extends CentreonObject
         if (($objectId = $this->getObjectId($params[self::ORDER_UNIQUENAME])) != 0) {
             $listParam = explode('|', $params[1]);
             foreach ($listParam as $paramSearch) {
+                if (!$paramString) {
+                    $paramString = $paramSearch;
+                } else {
+                    $paramString = $paramString . $this->delim . $paramSearch;
+                }
                 $field = $paramSearch;
                 if (!in_array($field, $authorizeParam)) {
                     $unknownParam[] = $field;
@@ -509,7 +549,11 @@ class CentreonHost extends CentreonObject
                             $ret = $ret[$field];
                             break;
                     }
-                    echo $paramSearch . ' : ' . $ret . "\n";
+                    if (!$resultString) {
+                        $resultString = $ret;
+                    } else {
+                        $resultString = $resultString . $this->delim . $ret;
+                    }
                 }
             }
         } else {
@@ -519,6 +563,8 @@ class CentreonHost extends CentreonObject
         if (!empty($unknownParam)) {
             throw new CentreonClapiException(self::OBJECT_NOT_FOUND . ":" . implode('|', $unknownParam));
         }
+        echo $paramString . "\n";
+        echo $resultString . "\n";
     }
 
     /**

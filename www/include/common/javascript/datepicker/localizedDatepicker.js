@@ -1,5 +1,5 @@
 /*
-* Copyright 2005-2018 Centreon
+* Copyright 2005-2019 Centreon
 * Centreon is developed by : Julien Mathis and Romain Le Merlus under
 * GPL Licence 2.0.
 *
@@ -91,18 +91,71 @@ function initDatepicker(className, altFormat, defaultDate, idName, timestampToSe
  */
 function setUserFormat() {
     // Getting the local storage attribute
-    var userLanguage = localStorage.getItem('locale').substring(0, 2);
-    if ("en" != userLanguage &&
-        "undefined" != userLanguage
-    ) {
-        jQuery('<script>')
-            .attr('src', './include/common/javascript/datepicker/datepicker-' + userLanguage + '.js')
-            .appendTo('body');
-        setTimeout(function () {
-            // checking if the localized library was launched
-            if ("undefined" !=  typeof(jQuery.datepicker.regional[userLanguage])) {
-                jQuery.datepicker.setDefaults(jQuery.datepicker.regional[userLanguage]);
+    var userLanguage = localStorage.getItem('locale') ? localStorage.getItem('locale').substring(0, 5) : "en_US";
+    if ("en_US" != userLanguage) {
+        //calling the webservice to check if the file exists
+        $.ajax({
+            url: './api/internal.php?object=centreon_datepicker_i18n&action=datepickerLibrary',
+            type: 'GET',
+            async: false,
+            data: {data: userLanguage},
+            success: function(data) {
+                if (null !== data && data.length > 15) {
+                    //A localized library was found, loading it.
+                    jQuery('<script>')
+                        .attr('src', './include/common/javascript/datepicker/' + data)
+                        .appendTo('body');
+                } else {
+                    console.log ('WARNING : datepicker localized library not found for : "' + userLanguage + '"');
+                    console.log ('Initializing the datepicker for "en_US"');
+                }
             }
-        })
+        });
+    }
+}
+
+function turnOnEvents() {
+    $(".datepicker").first().on('change', function (e) {
+        updateEndTime();
+    });
+    $(".timepicker").first().on('change', function (e) {
+        updateEndTime();
+    });
+    $(".datepicker").last().on('change', function (e) {
+        updateStartTime();
+    });
+    $(".timepicker").last().on('change', function (e) {
+        updateStartTime();
+    });
+}
+
+function turnOffEvents() {
+    $(".datepicker").off('change');
+    $(".timepicker").off('change');
+}
+
+function updateEndTime() {
+    var start = new Date($(".datepicker").first().val() + ' ' +  $(".timepicker").first().val());
+    var end = new Date($(".datepicker").last().val() + ' ' +  $(".timepicker").last().val());
+    if (start > end) {
+        turnOffEvents();
+        var e = new Date();
+        e.setTime(start.getTime() + 7200000); //microseconds
+        $(".datepicker").last().datepicker("setDate", e);
+        $(".timepicker").last().timepicker("setTime", e.getHours() + ':' + e.getMinutes());
+        turnOnEvents();
+    }
+}
+
+function updateStartTime() {
+    var start = new Date($(".datepicker").first().val() + ' ' +  $(".timepicker").first().val());
+    var end = new Date($(".datepicker").last().val() + ' ' +  $(".timepicker").last().val());
+    if (start > end) {
+        turnOffEvents();
+        var e = new Date();
+        e.setTime(end.getTime() - 7200000); //microseconds
+        $(".datepicker").first().datepicker("setDate", e);
+        $(".timepicker").first().timepicker("setTime", e.getHours() + ':' + e.getMinutes());
+        turnOnEvents();
     }
 }
