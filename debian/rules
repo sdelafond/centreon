@@ -44,3 +44,5 @@ override_dh_auto_install:
 	cp container.php .env $(DESTDIR)/usr/share/centreon/
 	cp -r config/* $(DESTDIR)/usr/share/centreon/config/
 	find $(DESTDIR) -type f -print0 | xargs -0 sed -i -e "s|$(DESTDIR)||g" -e 's/_CENTREON_PATH_PLACEHOLDER_/centreon/g'
+	mkdir -p $(DESTDIR)/etc/sudoers.d/
+	perl -pe s/@CENTREON_GROUP@/centreon/ tmpl/install/sudoersCentreonEngine > $(DESTDIR)/etc/sudoers.d/centreon
