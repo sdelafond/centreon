@@ -3,6 +3,7 @@
 include /usr/share/dpkg/default.mk
 
 DESTDIR := debian/centreon-web
+export HOME=/tmp
 
 %:
 	dh $@ --with apache2
