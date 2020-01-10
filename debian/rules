@@ -16,10 +16,9 @@ override_dh_auto_install:
 	# FIXME
 	mkdir -p $(DESTDIR)/usr/share/perl5
 	mkdir -p $(DESTDIR)/usr/share/centreon/
-	cp composer.json $(DESTDIR)/usr/share/centreon/ ; composer install --no-dev --optimize-autoloader
 	composer install --no-dev --optimize-autoloader
-	cp package.json $(DESTDIR)/usr/share/centreon
-	cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install && npm run build # ; npm prune --production
+	npm install
+	npm run build
 	export DESTDIR=$(DESTDIR) ; bash ./install.sh -f debian/varinstall-debian
 	cp $(DESTDIR)/usr/share/centreon/examples/centcore.init.d debian/centcore.init
 	cp $(DESTDIR)/usr/share/centreon/examples/centcore.default debian/centcore.default
@@ -29,8 +28,12 @@ override_dh_auto_install:
 	rm -f $(DESTDIR)/usr/share/centreon/installDir
 	mkdir $(DESTDIR)/usr/share/centreon/filesUpload
 	mkdir $(DESTDIR)/usr/share/centreon/installDir
-	# cp package.json $(DESTDIR)/usr/share/centreon
-	# cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install webpack && npm install && npm run build # ; npm prune --production
+	# cp composer.json $(DESTDIR)/usr/share/centreon/ ; cd $(DESTDIR)/usr/share/centreon/ ; composer install --no-dev --optimize-autoloader
+	# cp package.json package-lock.json $(DESTDIR)/usr/share/centreon
+	# cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install webpack
+	# cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm install
+	# cd $(DESTDIR)/usr/share/centreon ; export HOME=/tmp ; npm run build # ; npm prune --production
+	export HOME=/tmp ; npm run build # ; npm prune --production
 	sed -i -e 's|@CENTREON_ETC@|/etc/centreon|' -e 's|@CENTREON_LOG@|/var/log/centreon|' -e 's|@CENTREON_VARLIB@|/var/lib/centreon|' $(DESTDIR)/usr/share/centreon/config/centreon.config.php
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/centreon
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/export-mysql-indexes
