@@ -1,6 +1,4 @@
-centreon-web (19.10.4-1~1.gbpe1785f) UNRELEASED; urgency=medium
-
-  ** SNAPSHOT build @e1785fd5700808dbbe598096c23e826228086fe0 **
+centreon-web (19.10.4-1) unstable; urgency=medium
 
   [ Sébastien Delafond ]
   * Remove dependency on php-quickform
@@ -8,8 +6,19 @@ centreon-web (19.10.4-1~1.gbpe1785f) UNRELEASED; urgency=medium
   * Update homepage in debian/control
   * New upstream version 19.10.4
   * Rediff patches
+  * Update install variables
+  * modify debian/rules
+  * More debian/rules adjustments
+  * Rediff patches
+  * Set HOME to composer & npm don't crash in sbuild
+  * Correct install.conf.dist.php situation
+  * Rediff patches
+  * Add missing container.php
+  * Update debian/README.Debian
+  * more fixes
+  * Add sudo configuration
 
- -- Sebastien Delafond <seb@debian.org>  Fri, 27 Dec 2019 13:14:23 +0100
+ -- Sebastien Delafond <seb@debian.org>  Fri, 10 Jan 2020 14:30:37 +0100
 
 centreon-web (18.10.0-2) unstable; urgency=medium
 
