@@ -4,6 +4,7 @@ To finalize the installation, run the following commands as root:
   mysql -u root -e "UPDATE user SET password=PASSWORD('some-strong-password'),plugin='' WHERE user='root' ; FLUSH privileges;" mysql
   mkdir -p /etc/systemd/system/mariadb.service.d
   echo -e '[Service]\nLimitNOFILE=32000' > /etc/systemd/system/mariadb.service.d/limit-number-files.conf
+  perl -i -pe 's/\[mysqld\]/[mysqld]\nopen_files_limit = 32000/' /etc/mysql/mariadb.conf.d/50-server.cnf
   systemctl daemon-reload
   systemctl restart mariadb
 
@@ -50,5 +51,5 @@ configuration" button:
 After you've saved those admin user changes, manually restart the
 following services via systemctl: cbd, centengine, centcore.
 
- -- Sebastien Delafond <seb@debian.org>, Thu, 20 Dec 2018 10:32:37 +0100
+ -- Sebastien Delafond <seb@debian.org>, Fri, 10 Jan 2020 11:38:28 +0100
 
