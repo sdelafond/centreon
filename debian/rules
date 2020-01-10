@@ -40,5 +40,5 @@ override_dh_auto_install:
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/export-mysql-indexes
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/generateSqlLite
 	sed -i -e 's|@PHP_BIN@|/usr/bin/php|g' $(DESTDIR)/usr/share/centreon/bin/import-mysql-indexes
-	sed -i -e "s|centreon_plugins.*|centreon_plugins'] = '/usr/lib/centreon/plugins';|" $(DESTDIR)/usr/share/centreon/www/install/install.conf.dist.php
+	cp $(DESTDIR)/usr/share/centreon/www/install/install.conf.dist.php $(DESTDIR)/usr/share/centreon/www/install/install.conf.php
 	find $(DESTDIR) -type f -print0 | xargs -0 sed -i -e "s|$(DESTDIR)||g" -e 's/_CENTREON_PATH_PLACEHOLDER_/centreon/g'
