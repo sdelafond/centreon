@@ -3,23 +3,25 @@ Date: Tue, 20 Nov 2018 15:43:49 +0100
 Subject: Adapt web install to Debian layout
 
 ---
- www/install/install.conf.dist.php       | 10 ++++++----
+ www/install/install.conf.dist.php       | 12 +++++++-----
  www/install/var/brokers/centreon-broker |  4 ++--
  www/install/var/engines/centreon-engine |  8 ++++----
- 3 files changed, 12 insertions(+), 10 deletions(-)
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
 diff --git a/www/install/install.conf.dist.php b/www/install/install.conf.dist.php
-index 4e002c1..b6a4aac 100644
+index 4e002c1..3dc842a 100644
 --- a/www/install/install.conf.dist.php
 +++ b/www/install/install.conf.dist.php
-@@ -21,7 +21,9 @@ $conf_centreon['monitoring_etc'] = "/etc/centreon-engine";
+@@ -20,8 +20,10 @@ $conf_centreon['monitoring_group'] = "centreon-engine";
+ $conf_centreon['monitoring_etc'] = "/etc/centreon-engine";
  $conf_centreon['monitoring_binary'] = "/usr/sbin/centengine";
  $conf_centreon['monitoring_varlog'] = "/var/log/centreon-engine";
- $conf_centreon['plugin_dir'] = "/usr/lib/nagios/plugins";
+-$conf_centreon['plugin_dir'] = "/usr/lib/nagios/plugins";
 -$conf_centreon['centreon_engine_connectors'] = "/usr/lib64/centreon-connector";
 -$conf_centreon['centreon_engine_lib'] = "/usr/lib64/centreon-engine";
 -$conf_centreon['centreonbroker_cbmod'] = "/usr/lib64/nagios/cbmod.so";
 -$conf_centreon['centreon_plugins'] = "/usr/lib/centreon/plugins";
++$conf_centreon['plugin_dir'] = "/usr/lib/centreon/plugins";
 +$conf_centreon['centreon_engine_connectors'] = "/usr/bin";
 +$conf_centreon['centreon_engine_lib'] = "/usr/lib/centreon-engine";
 +$conf_centreon['centreonbroker_cbmod'] = "/usr/lib/centreon-broker/cbmod.so";
