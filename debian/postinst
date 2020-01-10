@@ -7,12 +7,12 @@ chown -R centreon:www-data /usr/share/centreon /etc/centreon /var/log/centreon
 chmod -R g+w /usr/share/centreon /etc/centreon /var/log/centreon
 
 chown -R centreon-engine:centreon-broker /var/lib/centreon
-chmod -R g+w /var/lib/centreon
+chmod -R go+w /var/lib/centreon
 
 # FIXME: until we can get those in the centreon-broker and
 # centreon-engine packages
-chgrp -R www-data /etc/centreon-broker /etc/centreon-engine
-chmod -R g+w /etc/centreon-broker /etc/centreon-engine
+chgrp -R www-data /etc/centreon-broker /etc/centreon-engine /var/cache/centreon
+chmod -R g+w /etc/centreon-broker /etc/centreon-engine /var/cache/centreon
 chmod -R g+w /var/log/centreon-broker
 
 if [ -e /usr/share/apache2/apache2-maintscript-helper ] ; then
